@@ -1,23 +1,21 @@
 classdef session < handle
     properties
-        BASE_DIR
-        sid
-        sstruct
+        allEvents
+        mathEvents
+        taskEvents
+        eegData
     end
     
     properties
-        eegPath
-        allEvents
+        
     end
     
     methods
-        function obj = session(id , sessionStruct , eegPath , BASE_DIR)
-            obj.sid = id;
-            obj.sstruct = sessionStruct;
-            obj.eegPath = eegPath;
-            obj.BASE_DIR = BASE_DIR;
-            
-            
+        function obj = session(allEvents , taskEvents , mathEvents , eegData)
+            obj.allEvents = allEvents;
+            obj.mathEvents = mathEvents;
+            obj.taskEvents = taskEvents;
+            obj.eegData = eegData;
         end
         
         
@@ -25,11 +23,12 @@ classdef session < handle
     
     methods (Access = protected)
 
-        function loadallevents(obj)
-            allEventsPath = obj.sstruct.(obj.sid).all_events;
-            obj.allEvents = loadjson([obj.BASE_DIR allEventsPath]);
-            
-        end
+%         function loadallevents(obj)
+%             allEventsPath = obj.sstruct.(obj.sid).all_events;
+%             obj.allEvents = loadjson([obj.BASE_DIR allEventsPath]);
+%             
+%         end
+
     end    
         
     
