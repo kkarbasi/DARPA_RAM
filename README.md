@@ -1,9 +1,10 @@
-**Usage**
+**Usage:**
+
 
 
 **Create a new "subject"**:
 
-`subj1 = subject(<r1.json file path> , patien id);`
+`subj1 = subject(<r1.json file path> , <patient id>);`
 
 
 **Get list of subject experiment types**:
