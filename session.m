@@ -23,12 +23,6 @@ classdef session < handle
     
     methods (Access = protected)
 
-%         function loadallevents(obj)
-%             allEventsPath = obj.sstruct.(obj.sid).all_events;
-%             obj.allEvents = loadjson([obj.BASE_DIR allEventsPath]);
-%             
-%         end
-
     end    
         
     
