@@ -5,7 +5,6 @@ classdef experiment < handle
         sessions = containers.Map
         
     end
-   
     
     methods
         % constructor
