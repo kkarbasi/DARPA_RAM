@@ -22,7 +22,7 @@
 `subj1.experiments(<experiment type>).getsessionnames`
 
 
-**Get a specific sessions data**:
+**Get a specific session's data**:
 
 `subj1.experiments(<experiment type>).sessions(<session name>).eegData` _% eeg recordings`_
 
