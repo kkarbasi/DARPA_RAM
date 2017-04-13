@@ -47,15 +47,19 @@ classdef experiment
             dataFormat = sources.(eegFN).data_format;
             sourceData = sources.(eegFN);
             eegFiles = regexdir(fullfile(obj.BASE_DIR , eegpath , 'noreref') , ['^' eegFN '\.\d*']);
+            nChannels = numel(eegFiles); 
             eeg = [];
-            for ff = 1:numel(eegFiles)
+            textprogressbar('Reading eeg data: ' , nChannels); pause(0.05);
+            for ff = 1 : nChannels
+                textprogressbar(ff, nChannels);
                 [~ , ~ , ext] = fileparts(eegFiles{ff});
-                disp(['reading channel ' ext ' ...']);
+%                 fprintf(['reading channel ' ext]);
                 f = fopen(eegFiles{ff});
                 eeg = [eeg fread(f , dataFormat)];
                 fclose(f);
+%                 fprintf(repmat('\b',1,20));
             end
-            
+            textprogressbar('done')
         end
                 
         function eegPath = eegpathmaker(obj , sessName)
