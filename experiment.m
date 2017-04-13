@@ -1,4 +1,4 @@
-classdef experiment < handle
+classdef experiment
     properties
         BASE_DIR
         expInfo % like this: r1.protocols.r1.subjects.R1001P.experiments.FR1
@@ -22,9 +22,9 @@ classdef experiment < handle
                 allEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).all_events));
                 taskEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).task_events));
                 mathEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).math_events));
-                eegData = obj.getsesseeg(sessNames{i});
+                [eegData , sourceData] = obj.getsesseeg(sessNames{i});
                 obj.sessions(sessNames{i}) = session(allEvents , taskEvents ...
-                    , mathEvents , eegData);
+                    , mathEvents , eegData , sourceData);
             end
             
         end
@@ -37,21 +37,22 @@ classdef experiment < handle
         
     methods (Access = protected)
         
-        function eeg = getsesseeg(obj , sessName) 
+        function [eeg , sourceData] = getsesseeg(obj , sessName) 
             % loads eeg data corresponding to session sessName
             
             eegpath = obj.eegpathmaker(sessName);
             sources = loadjson(fullfile(obj.BASE_DIR , eegpath , 'sources.json'));
             eegFN = fieldnames(sources);
             eegFN = eegFN{1};
-            
+            dataFormat = sources.(eegFN).data_format;
+            sourceData = sources.(eegFN);
             eegFiles = regexdir(fullfile(obj.BASE_DIR , eegpath , 'noreref') , ['^' eegFN '\.\d*']);
             eeg = [];
             for ff = 1:numel(eegFiles)
                 [~ , ~ , ext] = fileparts(eegFiles{ff});
                 disp(['reading channel ' ext ' ...']);
                 f = fopen(eegFiles{ff});
-                eeg = [eeg fread(f)];
+                eeg = [eeg fread(f , dataFormat)];
                 fclose(f);
             end
             
