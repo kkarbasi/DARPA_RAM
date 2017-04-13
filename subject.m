@@ -1,4 +1,4 @@
-classdef subject
+classdef subject < handle
     
     properties
        BASE_DIR % Z:\snel\share\data\DARPA_RAM\session_data\experiment_data\

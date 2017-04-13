@@ -1,4 +1,4 @@
-classdef experiment
+classdef experiment < handle
     properties
         BASE_DIR
         expInfo % like this: r1.protocols.r1.subjects.R1001P.experiments.FR1

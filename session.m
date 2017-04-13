@@ -1,4 +1,4 @@
-classdef session
+classdef session < handle
     properties
         allEvents
         mathEvents
