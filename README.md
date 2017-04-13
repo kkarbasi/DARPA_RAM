@@ -17,17 +17,17 @@
 `subj1.loadexperiment(<experiment type, e.g. 'FR1' or 'FR2', etc.>)`
 
 
-**Get each experiment's session names**:
+**Get each experiment's session ids**:
 
-`subj1.experiments(<experiment type>).getsessionnames`
+`subj1.experiments(<experiment type>).getsessionids`
 
 
 **Get a specific session's data**:
 
-`subj1.experiments(<experiment type>).sessions(<session name>).eegData` _% eeg recordings`_
+`subj1.experiments(<experiment type>).sessions(<session id>).eegData` _% eeg recordings`_
 
-`subj1.experiments(<experiment type>).sessions(<session name>).allEvents` _% all events_
+`subj1.experiments(<experiment type>).sessions(<session id>).allEvents` _% all events_
 
-`subj1.experiments(<experiment type>).sessions(<session name>).taskEvents` _% only task events_
+`subj1.experiments(<experiment type>).sessions(<session id>).taskEvents` _% only task events_
 
-`subj1.experiments(<experiment type>).sessions(<session name>).mathEvents` _% only math events_
+`subj1.experiments(<experiment type>).sessions(<session id>).mathEvents` _% only math events_

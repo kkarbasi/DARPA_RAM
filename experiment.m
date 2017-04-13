@@ -18,18 +18,19 @@ classdef experiment < handle
         % loads the current experiment sessions data
             sessNames = fieldnames(obj.expInfo.sessions);
             for i = 1:numel(sessNames)
-                disp(['Loading session ' sessNames{i} '...'])
+                disp(['Loading session ' getsessionid(sessNames{i}) ' ...'])
                 allEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).all_events));
                 taskEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).task_events));
                 mathEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).math_events));
                 [eegData , sourceData] = obj.getsesseeg(sessNames{i});
-                obj.sessions(sessNames{i}) = session(allEvents , taskEvents ...
-                    , mathEvents , eegData , sourceData);
+                obj.sessions(getsessionid( sessNames{i} ) ) = ...
+                    session( allEvents , taskEvents , mathEvents ,...
+                    eegData , sourceData );
             end
             
         end
         
-        function sessNames = getsessionnames(obj)
+        function sessNames = getsessionids(obj)
             sessNames = obj.sessions.keys;
         end
         
@@ -49,15 +50,13 @@ classdef experiment < handle
             eegFiles = regexdir(fullfile(obj.BASE_DIR , eegpath , 'noreref') , ['^' eegFN '\.\d*']);
             nChannels = numel(eegFiles); 
             eeg = [];
-            textprogressbar('Reading eeg data: ' , nChannels); pause(0.05);
+            disp(['Number of EEG channels: ' , num2str(nChannels)]);
+            textprogressbar('Reading EEG data: ' , nChannels); pause(0.05);
             for ff = 1 : nChannels
                 textprogressbar(ff, nChannels);
-                [~ , ~ , ext] = fileparts(eegFiles{ff});
-%                 fprintf(['reading channel ' ext]);
                 f = fopen(eegFiles{ff});
                 eeg = [eeg fread(f , dataFormat)];
                 fclose(f);
-%                 fprintf(repmat('\b',1,20));
             end
             textprogressbar('done')
         end
@@ -69,6 +68,7 @@ classdef experiment < handle
             eegPath = fileparts(tmp);
             eegPath = strrep(eegPath , 'behavioral' , 'ephys');
         end
+        
 
     end
     
@@ -87,4 +87,8 @@ function Outfiles=regexdir(baseDir,searchExpression)
             Outfiles{length(Outfiles)+1} = fullfile(baseDir,dstr(II).name);
         end
     end
+end
+
+function sessID = getsessionid(sessName)
+    sessID = sessName(5);
 end
