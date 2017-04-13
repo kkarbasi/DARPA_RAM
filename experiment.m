@@ -19,19 +19,21 @@ classdef experiment < handle
             sessNames = fieldnames(obj.expInfo.sessions);
             for i = 1:numel(sessNames)
                 disp(['Loading session ' sessNames{i} '...'])
-                allEvents = loadjson([obj.BASE_DIR obj.expInfo.sessions.(sessNames{i}).all_events]);
-                taskEvents = loadjson([obj.BASE_DIR obj.expInfo.sessions.(sessNames{i}).task_events]);
-                mathEvents = loadjson([obj.BASE_DIR obj.expInfo.sessions.(sessNames{i}).math_events]);
+                allEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).all_events));
+                taskEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).task_events));
+                mathEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).math_events));
                 eegData = obj.getsesseeg(sessNames{i});
                 obj.sessions(sessNames{i}) = session(allEvents , taskEvents ...
                     , mathEvents , eegData);
             end
             
-            
+        end
+        
+        function sessNames = getsessionnames(obj)
+            sessNames = obj.sessions.keys;
         end
         
     end
-    
         
     methods (Access = protected)
         
@@ -53,7 +55,6 @@ classdef experiment < handle
             end
             
         end
-        
                 
         function eegPath = eegpathmaker(obj , sessName)
             % Extract this subject's eeg data path from the available event
