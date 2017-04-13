@@ -21,11 +21,15 @@ classdef subject < handle
         
         function obj = subject(r1Filename , patientID)
             % patienID: patient  identifier
-            
+                       
             tmp = loadjson(r1Filename);
-            obj.r1 = tmp.protocols.r1.subjects.(patientID).experiments;
-            obj.BASE_DIR = fileparts(fileparts(r1Filename));
-            obj.patientID = patientID;
+            if isfield(tmp.protocols.r1.subjects , patientID)
+                obj.r1 = tmp.protocols.r1.subjects.(patientID).experiments;
+                obj.BASE_DIR = fileparts(fileparts(r1Filename));
+                obj.patientID = patientID;
+            else
+                error('Patient ID does not exist');
+            end
             
         end
         
@@ -39,11 +43,22 @@ classdef subject < handle
                 case 'FR1'
                     obj.experiments(expName) = FR1(obj.BASE_DIR , obj.r1.(expName));
                 case 'FR2'
-                    
+                    disp('You are the man!')
                 case 'catFR1'
-                    
+                    disp('You are the man!')
                 case 'catFR2'
-                    
+                    disp('You are the man!')
+                case 'PAL1'
+                    disp('You are the man!')
+                case 'PAL2'
+                    disp('You are the man!')
+                case 'YC1'
+                    disp('You are the man!')
+                case 'YC2'
+                    disp('You are the man!')
+                otherwise
+                    error([expName ' is not a valid expertiment type;'...
+                        ' Choose from: FR1, FR2, PAL1, PAL2, YC1, YC2, catFR1, catFR2'])
             end
         end
         

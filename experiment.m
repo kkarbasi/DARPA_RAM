@@ -39,6 +39,7 @@ classdef experiment < handle
         
         function eeg = getsesseeg(obj , sessName) 
             % loads eeg data corresponding to session sessName
+            
             eegpath = obj.eegpathmaker(sessName);
             sources = loadjson(fullfile(obj.BASE_DIR , eegpath , 'sources.json'));
             eegFN = fieldnames(sources);
