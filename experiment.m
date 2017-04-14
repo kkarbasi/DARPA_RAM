@@ -68,7 +68,6 @@ classdef experiment < handle
             eegPath = fileparts(tmp);
             eegPath = strrep(eegPath , 'behavioral' , 'ephys');
         end
-        
 
     end
     

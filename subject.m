@@ -43,19 +43,19 @@ classdef subject < handle
                 case 'FR1'
                     obj.experiments(expName) = FR1(obj.BASE_DIR , obj.r1.(expName));
                 case 'FR2'
-                    disp('You are the man!')
+                    disp('First, creat a class for FR2; You are the man!')
                 case 'catFR1'
-                    disp('You are the man!')
+                    disp('First, creat a class for catFR1; You are the man!')
                 case 'catFR2'
-                    disp('You are the man!')
+                    disp('First, creat a class for catFR2; You are the man!')
                 case 'PAL1'
-                    disp('You are the man!')
+                    disp('First, creat a class for PAL1; You are the man!')
                 case 'PAL2'
-                    disp('You are the man!')
+                    disp('First, creat a class for PAL2; You are the man!')
                 case 'YC1'
-                    disp('You are the man!')
+                    disp('First, creat a class for YC1; You are the man!')
                 case 'YC2'
-                    disp('You are the man!')
+                    disp('First, creat a class for YC2; You are the man!')
                 otherwise
                     error([expName ' is not a valid expertiment type;'...
                         ' Choose from: FR1, FR2, PAL1, PAL2, YC1, YC2, catFR1, catFR2'])
