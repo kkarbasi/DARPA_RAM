@@ -7,10 +7,8 @@ classdef session < handle
     end
           
     properties
-        
         sampleRate % eeg sample rate (Hz)
         nSamples % number of eeg samples
-        
     end
     
     methods

@@ -20,6 +20,8 @@ classdef subject < handle
     methods
         
         function obj = subject(r1Filename , patientID)
+            % Constructor
+            % r1.json, protocol full file name
             % patienID: patient  identifier
                        
             tmp = loadjson(r1Filename);

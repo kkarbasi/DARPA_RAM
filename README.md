@@ -36,3 +36,13 @@
 **Get trimmed to events start/end eeg data**
 
 `subj1.experiments(<experiment type>).sessions(<session id>).gettrimmedeeg`
+
+
+**Get a list of event data field names**
+
+`subj1.experiments(<experiment type>).sessions(<session id>).geteventfields`
+
+
+**Get a list of values for a specific field in the event data**
+
+`subj1.experiments(<experiment type>).sessions(<session id>).geteventfieldvalues(<field name>)`
