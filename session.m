@@ -26,12 +26,27 @@ classdef session < handle
         
         function trimmedEEG = gettrimmedeeg(obj)
            % trim the eeg to include only recordings from the first event
-           % to the last event
-           
+           % to the last event           
            i0 = obj.allEvents{1}.eegoffset;
            iend = obj.allEvents{end}.eegoffset;
            trimmedEEG = obj.eegData(i0 : iend , : );
            
+        end
+        
+        function fields = geteventfields(obj)
+            % Returns event field names
+            fields = fieldnames(obj.allEvents{1});
+        end
+        
+        function vals = geteventfieldvalues(obj , fieldName)
+            % Returns list of values for fieldName of this session's events 
+
+            vals = cellfun(@(x) {x.(fieldName)} , obj.allEvents);
+            if ischar(vals{1})
+                vals = unique(vals);
+            else
+                vals = num2cell(unique(cell2mat(vals)));
+            end
         end
         
     end
