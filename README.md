@@ -31,3 +31,8 @@
 `subj1.experiments(<experiment type>).sessions(<session id>).taskEvents` _% only task events_
 
 `subj1.experiments(<experiment type>).sessions(<session id>).mathEvents` _% only math events_
+
+
+**Get trimmed to events start/end eeg data**
+
+`subj1.experiments(<experiment type>).sessions(<session id>).gettrimmedeeg`
