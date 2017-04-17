@@ -47,6 +47,18 @@ classdef session < handle
             end
         end
         
+        function eventEEG = geteventeeg(obj , event , noffset , poffset , buffer)
+            % Returns EEG data associated with an event. eeg is returned
+            % from noffset ms before the event onset to poffset ms after. There
+            % can also be a buffer (ms) added befor and after the epoch.
+            eegIdx = event.eegoffset;
+            noffset = floor(noffset/2);
+            poffset = floor(poffset/2);
+            buffer = floor(buffer/2);
+            eventEEG = obj.eegData( eegIdx - (noffset + buffer) : eegIdx + ...
+                (poffset + buffer)-1 , : );
+        end
+        
     end
     
     methods (Access = protected)
