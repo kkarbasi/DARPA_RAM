@@ -1,4 +1,4 @@
-function textprogressbar(c , numchannels)
+function textprogressbar(c , numchannels , eventStr)
 % This function creates a text progress bar. It should be called with a 
 % STRING argument to initialize and terminate. Otherwise the number correspoding 
 % to progress in % should be supplied.
@@ -40,7 +40,7 @@ elseif isnumeric(c)
     percentageOut = [percentageOut repmat(' ',1,strPercentageLength-length(percentageOut)-1)];
     nDots = floor(c/numchannels*strDotsMaximum);
     dotOut = ['[' repmat('.',1,nDots) repmat(' ',1,strDotsMaximum-nDots) ']'];
-    strOut = ['Channel ' percentageOut dotOut];
+    strOut = [eventStr ' ' percentageOut dotOut];
     
     % Print it on the screen
     if strCR == -1,

@@ -51,9 +51,9 @@ classdef experiment < handle
             nChannels = numel(eegFiles); 
             eeg = [];
             disp(['Number of EEG channels: ' , num2str(nChannels)]);
-            textprogressbar('Reading EEG data: ' , nChannels); pause(0.05);
+            textprogressbar('Reading EEG data: ' , nChannels , 'Channel'); pause(0.05);
             for ff = 1 : nChannels
-                textprogressbar(ff, nChannels);
+                textprogressbar(ff, nChannels, 'Channel');
                 f = fopen(eegFiles{ff});
                 eeg = [eeg fread(f , dataFormat)];
                 fclose(f);
