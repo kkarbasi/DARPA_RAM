@@ -23,6 +23,7 @@ classdef experiment < handle
                 taskEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).task_events));
                 mathEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).math_events));
                 [eegData , sourceData] = obj.getsesseeg(sessNames{i});
+                eegData = obj.getbipolareeg(sessNames{i} , eegData);
                 obj.sessions(getsessionid( sessNames{i} ) ) = ...
                     session( allEvents , taskEvents , mathEvents ,...
                     eegData , sourceData );
@@ -67,6 +68,29 @@ classdef experiment < handle
             tmp = obj.expInfo.sessions.(sessName).all_events;
             eegPath = fileparts(tmp);
             eegPath = strrep(eegPath , 'behavioral' , 'ephys');
+        end
+        
+        function pairs = getpairs(obj , sessionName)
+            pairsPath = obj.expInfo.sessions.(sessionName).pairs;
+            pairsJson = loadjson(fullfile(obj.BASE_DIR , pairsPath));
+            subjectID = obj.expInfo.sessions.(sessionName).subject_alias;
+            pairs = pairsJson.(subjectID).pairs;
+            
+        end
+        
+        function bpeeg = getbipolareeg(obj , sessName , eeg)
+            disp('Extracting bipolar eeg...')
+            pairs = obj.getpairs(sessName);
+            pairNames = fieldnames(pairs);
+            bpeeg = zeros(size(eeg , 1) , numel(pairNames));
+            for i = 1:numel(pairNames)
+                ch1 = pairs.(pairNames{i}).channel_1;
+                ch2 = pairs.(pairNames{i}).channel_2;
+                ch1 = eeg(:,ch1);
+                ch2 = eeg(:,ch2);
+                bpeeg(:,i) = abs(ch2 - ch1);
+            end
+            
         end
 
     end
