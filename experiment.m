@@ -23,7 +23,6 @@ classdef experiment < handle
                 taskEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).task_events));
                 mathEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).math_events));
                 [eegData , sourceData] = obj.getsesseeg(sessNames{i});
-                eegData = obj.getbipolareeg(sessNames{i} , eegData);
                 obj.sessions(getsessionid( sessNames{i} ) ) = ...
                     session( allEvents , taskEvents , mathEvents ,...
                     eegData , sourceData );
@@ -39,7 +38,7 @@ classdef experiment < handle
         
     methods (Access = protected)
         
-        function [eeg , sourceData] = getsesseeg(obj , sessName) 
+        function [bpeeg , sourceData] = getsesseeg(obj , sessName) 
             % loads eeg data corresponding to session sessName
             
             eegpath = obj.eegpathmaker(sessName);
@@ -48,18 +47,35 @@ classdef experiment < handle
             eegFN = eegFN{1};
             dataFormat = sources.(eegFN).data_format;
             sourceData = sources.(eegFN);
-            eegFiles = regexdir(fullfile(obj.BASE_DIR , eegpath , 'noreref') , ['^' eegFN '\.\d*']);
-            nChannels = numel(eegFiles); 
-            eeg = [];
-            disp(['Number of EEG channels: ' , num2str(nChannels)]);
+            
+            disp('Extracting bipolar eeg...')
+            
+            pairs = obj.getpairs(sessName);
+            pairNames = fieldnames(pairs);
+            nChannels = numel(pairNames); 
             textprogressbar('Reading EEG data: ' , nChannels , 'Channel'); pause(0.05);
-            for ff = 1 : nChannels
-                textprogressbar(ff, nChannels, 'Channel');
-                f = fopen(eegFiles{ff});
-                eeg = [eeg fread(f , dataFormat)];
-                fclose(f);
+            bpeeg = [];
+            c = 1;
+            for i = 1:nChannels
+                textprogressbar(i, nChannels, 'Channel');
+                ch1 = num2str(pairs.(pairNames{i}).channel_1 , '%03i');
+                ch2 = num2str(pairs.(pairNames{i}).channel_2 , '%03i');
+                
+                ch1FN = fullfile(obj.BASE_DIR , eegpath , 'noreref' , [eegFN '.' ch1]);
+                ch2FN = fullfile(obj.BASE_DIR , eegpath , 'noreref' , [eegFN '.' ch2]);
+                
+                [ch1eeg , success1] = readeegdata(ch1FN , dataFormat);
+                [ch2eeg , success2] = readeegdata(ch2FN , dataFormat);
+                
+                if success1 && success2
+                    bpeeg(:,c) = abs(ch2eeg - ch1eeg);
+                    c = c + 1;
+                end
+                
             end
             textprogressbar('done')
+
+
         end
                 
         function eegPath = eegpathmaker(obj , sessName)
@@ -78,20 +94,20 @@ classdef experiment < handle
             
         end
         
-        function bpeeg = getbipolareeg(obj , sessName , eeg)
-            disp('Extracting bipolar eeg...')
-            pairs = obj.getpairs(sessName);
-            pairNames = fieldnames(pairs);
-            bpeeg = zeros(size(eeg , 1) , numel(pairNames));
-            for i = 1:numel(pairNames)
-                ch1 = pairs.(pairNames{i}).channel_1;
-                ch2 = pairs.(pairNames{i}).channel_2;
-                ch1 = eeg(:,ch1);
-                ch2 = eeg(:,ch2);
-                bpeeg(:,i) = abs(ch2 - ch1);
-            end
-            
-        end
+%         function bpeeg = getbipolareeg(obj , sessName , eeg)
+%             disp('Extracting bipolar eeg...')
+%             pairs = obj.getpairs(sessName);
+%             pairNames = fieldnames(pairs);
+%             bpeeg = zeros(size(eeg , 1) , numel(pairNames));
+%             for i = 1:numel(pairNames)
+%                 ch1 = pairs.(pairNames{i}).channel_1;
+%                 ch2 = pairs.(pairNames{i}).channel_2;
+%                 ch1 = eeg(:,ch1);
+%                 ch2 = eeg(:,ch2);
+%                 bpeeg(:,i) = abs(ch2 - ch1);
+%             end
+%             
+%         end
 
     end
     
@@ -114,4 +130,16 @@ end
 
 function sessID = getsessionid(sessName)
     sessID = sessName(5);
+end
+
+function [eeg , success] = readeegdata(filename , dataFormat)
+    if exist(filename , 'file')
+        f = fopen(filename);
+        eeg = fread(f , dataFormat);
+        fclose(f);
+        success = true;
+    else
+        eeg = [];
+        success = false;
+    end
 end
