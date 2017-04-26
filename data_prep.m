@@ -26,6 +26,7 @@ disp(size(events_all_tmp))
 %RESHAPE%
 events_all_tmp = reshape(events_all_tmp , size(events_all_tmp , 1) , size(events_all_tmp , 2) , []);
 disp(size(events_all))
+
 %% Calc mean and std of each channel at each frequency
 avgs = mean(events_all_tmp , 3);
 stds = std(events_all_tmp ,0, 3);
@@ -36,8 +37,10 @@ clear events_all_tmp
 % avgChannels = mean(mean(mean(events_all,1) , 3) , 4);
 % avgChannels2 = mean(reshape(permute(events_all , [2,1,3,4]) , size(events_all , 2) , []),2);
 % stdChannels = std(std(std(events_all,1) , 3) , 4);
+
 %% Calc zscore and take average for each freq/channel/event
 zscored = num2cell(events_all , 4);
+
 %%
 for ievent = 1:numEvents
     
