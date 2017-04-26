@@ -1,4 +1,9 @@
-**Usage:**
+**You can sart using by running cells in the sample_run.m script**
+**To prepare training data, run prep_data.m script after loading data using sample_run script**
+
+
+
+**Detailed Usage:**
 
 
 
