@@ -20,7 +20,7 @@ classdef FR1 < experiment
     end
     
     methods
-        function wList = getwordlist(obj , sessionID) 
+        function wList = getwordorylist(obj , sessionID) 
             % get a list of used words in session sessionID of this
             % experiment
             wList = obj.sessions(sessionID).geteventfieldvalues('word');
