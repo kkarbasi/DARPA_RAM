@@ -75,7 +75,8 @@ classdef FR1 < experiment
             % now eventsEEG is of size (num task events , epoch
             % range(2800*2 ms) in paper) , num channels)
            obj.eventsEEG = eventsEEG;
-            
+           obj.dummy();
+           
         end
         
         function ievent = dummy(obj)
@@ -98,7 +99,7 @@ classdef FR1 < experiment
 
                 disp(['Saving event ' num2str(ievent)]);
 %                 wave(ievent , :,:,:) = ecwt_r;
-                save(['~/cosmic-home/DARPARAM/events_resampled_bp/' num2str(ievent,'%03i') '.mat'] ,  'ecwt_r');
+%                 save(['~/cosmic-home/DARPARAM/events_resampled_bp/' num2str(ievent,'%03i') '.mat'] ,  'ecwt_r');
 %                 parfor ielectrode = 1:size(obj.eventsEEG , 3)
 %                     [wave(ievent , ielectrode , : , :), ~, ~, ~, ~, ~, ~] = ...
 %                         contwt(obj.eventsEEG(ievent , : , ielectrode), 1/Fs, 0, obj.spacing, [], obj.numFreqs, 'MORLET', 5);    
