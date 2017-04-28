@@ -53,3 +53,23 @@ for ievent = 1:numEvents
     end
 end
 
+%% Get word event indices
+[we , wi]  = s1.experiments('FR1').getwordevents('0');
+
+%% Extract word event training data
+
+trainingData = zscored(wi , : , :);
+
+%% Extract training labels
+trainingLabels = zeros(size(we));
+for iwe = 1 : size(we , 2)
+    trainingLabels(iwe) = we{iwe}.recalled;
+end
+%%
+% addpath(genpath('~/cosmic-home/RAMstuff/logisticregress'));
+% addpath(genpath('Y:/RAMstuff/logisticregress'));
+load traindata.mat
+Y = trainingLabels';
+X = reshape(trainingData, size(trainingData , 1), []);
+X = cell2mat(X);
+model = classifierLogisticRegression( X, Y, 'lambda', 'crossvalidation' , logspace(-6,4,22)' );
