@@ -107,7 +107,8 @@ classdef FR1 < experiment
                 ecwt = contwt_par(squeeze(obj.eventsEEG(ievent , : , :)),...
                     1/Fs, 0, obj.spacing, [], obj.numFreqs, 'MORLET', 5);
                 disp('2')
-                ecwt = log(ecwt);
+                % log transform
+                ecwt = log(ecwt); 
                 ecwt_r = zeros(size(ecwt,1) , size(ecwt , 2) , floor(size(ecwt , 3)/10));
                 for ielectrode = 1:size(obj.eventsEEG , 3)
                     ecwt_r(ielectrode , : , :) = resample(squeeze(ecwt(ielectrode , : , :))' , 1, 10)';
@@ -116,7 +117,7 @@ classdef FR1 < experiment
 
                 disp(['Saving event ' num2str(ievent)]);
 %                 wave(ievent , :,:,:) = ecwt_r;
-%                 save(['~/cosmic-home/DARPARAM/events_resampled_bp/' num2str(ievent,'%03i') '.mat'] ,  'ecwt_r');
+                save(['../session_1/' num2str(ievent,'%03i') '.mat'] ,  'ecwt_r');
 %                 parfor ielectrode = 1:size(obj.eventsEEG , 3)
 %                     [wave(ievent , ielectrode , : , :), ~, ~, ~, ~, ~, ~] = ...
 %                         contwt(obj.eventsEEG(ievent , : , ielectrode), 1/Fs, 0, obj.spacing, [], obj.numFreqs, 'MORLET', 5);    

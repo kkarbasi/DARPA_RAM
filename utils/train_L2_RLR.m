@@ -9,22 +9,28 @@ function [scratchpad] = train_L2_RLR(trainpats,traintargs,class_args,cv_args)
 %% process arguments
                          
 % default parameters
-defaults.regularization = 'L2';
-defaults.lambda         = 1;
-defaults.optimization   = 'minimize';
-defaults.labelsGroup    = []; 
+% defaults.regularization = 'L2';
+% defaults.lambda         = 1;
+% defaults.optimization   = 'minimize';
+% defaults.labelsGroup    = []; 
 
 
- class_args = mergestructs(class_args, defaults);
+%  class_args = mergestructs(class_args, defaults);
 
   regularization = class_args.regularization;
   lambda         = class_args.lambda;
   optimization   = class_args.optimization;
-  lambda         = class_args.penalty;
+%   lambda         = class_args.penalty;
   
 %% call the classifier function
+if numel(lambda)>1
 
-model = classifierLogisticRegression( trainpats', traintargs', 'lambda', lambda);
+    model = classifierLogisticRegression( trainpats', traintargs', 'lambda', 'crossvalidation' , lambda);
+    
+else
+    model = classifierLogisticRegression( trainpats', traintargs' , 'lambda', lambda);
+    disp('Trained without crossvalidation');
+end
 
 %% pack the results
 

@@ -73,7 +73,7 @@ classdef experiment < handle
                 end
                 
             end
-            textprogressbar('done')
+            textprogressbar(['done!---EEG data for ' num2str(c-1) ' channels was found!'])
 
 
         end
