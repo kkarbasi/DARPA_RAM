@@ -56,6 +56,7 @@ classdef experiment < handle
             textprogressbar('Reading EEG data: ' , nChannels , 'Channel'); pause(0.05);
             bpeeg = [];
             c = 1;
+            missed_channels = [];
             for i = 1:nChannels
                 textprogressbar(i, nChannels, 'Channel');
                 ch1 = num2str(pairs.(pairNames{i}).channel_1 , '%03i');
@@ -70,10 +71,13 @@ classdef experiment < handle
                 if success1 && success2
                     bpeeg(:,c) = abs(ch2eeg - ch1eeg);
                     c = c + 1;
+                else
+                    missed_channels = [missed_channels i];
                 end
                 
             end
-            textprogressbar(['done!---EEG data for ' num2str(c-1) ' channels was found!'])
+            textprogressbar(['done!---EEG data for ' num2str(c-1)...
+                ' channels was found!--missed: ' num2str(missed_channels)])
 
 
         end
