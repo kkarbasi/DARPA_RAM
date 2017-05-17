@@ -12,8 +12,9 @@ switch lower(getUsername)
     addpath(genpath('~/cosmic-home/DARPARAM')); % path to your code
 end
 
-% r1_path = '~/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
-r1_path = '~/mnt/labs/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+r1_path = '~/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+% r1_path = '~/mnt/labs/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+
 
 patientID = 'R1063C';
 

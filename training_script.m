@@ -38,15 +38,17 @@ sctratchpad = train_L2_RLR(X' , Y' , defaults, 1);
 
 [acts , scratchpad] = test_L2_RLR(X',0,sctratchpad);
 
-%% Plot ROC
+%% test & Plot ROC
 
-[x1 , y1 ,~, AUC ] = perfcurve(Y' , acts , 1);
+y_t = sigmoid(X*w);
+y(y == -1) = 0;
+[x1 , y1 ,~, AUC ] = perfcurve(y' , y_t , 1);
 plot(x1,y1)
 title(['AUC = ' num2str(AUC)])
 
 %% Plot classifier output probability
 
-% get list event indices
+%% get list event indices
 listIndices = {};
 
 for l  = 1:25
@@ -63,6 +65,7 @@ for l  = 1:25
     
     listIndices{l} = indices;
 end
+%%
 plot(acts)
 hold on
 
