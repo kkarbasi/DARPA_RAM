@@ -33,8 +33,7 @@ buffer = 1500;
 
 %% Run wavelet transform: (THIS WILL TAKE A LONG TIME)
 % for now, this will save each event on local hdd (go to FR1 class function
-% dumy() to change the saving path
+% wt_log_resample() to change the saving path
 s1.experiments('FR1').cmwt('1' , [noffset , poffset] , buffer , [1 ,200] , 49);
-
 
 % After saving this step is done, run data_prep to extract training data

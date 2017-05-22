@@ -23,7 +23,7 @@ X_train = reshape(trainingData, size(trainingData , 1), []);
 X_train = cell2mat(X_train);
 
 X_train = [ones(size(X_train,1),1) standardizeCols(X_train)];
-X_train = [ones(size(X_train,1),1) X_train];
+% X_train = [ones(size(X_train,1),1) X_train];
 X_train = double(X_train);
 % y_train(y_train==0) = -1;
 
@@ -47,14 +47,14 @@ X_test = cell2mat(X_test);
 
 X_test_orig = X_test;
 X_test = [ones(size(X_test,1),1) standardizeCols(X_test)];
-X_test = [ones(size(X_test,1),1) X_test];
+% X_test = [ones(size(X_test,1),1) X_test];
 X_test = double(X_test);
 
 clearvars 'trainingData' 'trainingLabels'
 
 %% X-Validate on lambda
-% lambdas = logspace(-6, 4, 22);
-lambdas = 1300;
+lambdas = logspace(-6, 4, 22);
+% lambdas = 1300;
 AUCs = [];
 for ll = 1:numel(lambdas)
     
@@ -69,7 +69,7 @@ for ll = 1:numel(lambdas)
     randn('state',0);
 
     %%% Set up problem
-    maxIter = n*10000; % 10 passes through the data set
+    maxIter = n*500; % 10 passes through the data set
     
     
 
@@ -106,16 +106,16 @@ for ll = 1:numel(lambdas)
     
     y_h = sigmoid(X_test*w);
     [x1 , y1 ,~, AUC ] = perfcurve(y_test' , y_h , 1);
-    fh = figure; plot(x1,y1); hold on
-    title(['Lambda = ' num2str(lambda) ';  AUC = ' num2str(AUC)])
-    plot( [0 1] , [0 1] , '--r'); hold off
+%     fh = figure; plot(x1,y1); hold on
+%     title(['Lambda = ' num2str(lambda) ';  AUC = ' num2str(AUC)])
+%     plot( [0 1] , [0 1] , '--r'); hold off
 %     saveas(fh , ['~/snel/share/derived/DARPA_RAM/R1063C_XVal_tr_1_test_0/' num2str(lambda) '.jpg']) 
 %     close(fh)
     AUCs = [AUCs AUC];
     pause(0.1)
     
 end
-
+figure; plot(AUCs)
 %% Plot classifier output probability
 
 figure('Position' , [50 0 1600 180])

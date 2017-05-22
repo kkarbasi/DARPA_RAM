@@ -78,12 +78,11 @@ classdef FR1 < experiment
             obj.seteegrange(eegRange , buffer);
             obj.setspacing(freqRange , numFreqs);
             
-                        % Trim eeg for all events:
+            % Trim eeg for all events:
             taskEvents = obj.sessions(sessionID).taskEvents;
             sigLen = (sum(eegRange) + 2 * buffer)/(1000/obj.sessions('0').sampleRate);
             
             eventsEEG = zeros(numel(taskEvents) , sigLen , size(obj.sessions(sessionID).eegData,2));
-%             parpool('local' , 2);
             for ievent = 1:numel(taskEvents)
                 eventsEEG(ievent , : , :) = ...
                     obj.sessions(sessionID).geteventeeg(taskEvents{ievent}...
@@ -96,12 +95,13 @@ classdef FR1 < experiment
            
         end
         
-        function ievent = wt_log_resample(obj)
+        function wt_log_resample(obj)
+            % Executes the contwt_par function (vectorized wavelet
+            % transform). Then log transforms the data, then resample at
+            % 1/10 rate
             
             Fs = obj.sessions('0').sampleRate;
-%             wave = zeros(size(obj.eventsEEG , 1) , size(obj.eventsEEG , 3) , obj.numFreqs+1 , 280);
-%             wave = complex(wave , 0);
-%             parpool('local' , 4)
+
             for ievent = 1:size(obj.eventsEEG , 1)
                 disp('1')
                 ecwt = contwt_par(squeeze(obj.eventsEEG(ievent , : , :)),...
@@ -113,15 +113,10 @@ classdef FR1 < experiment
                 for ielectrode = 1:size(obj.eventsEEG , 3)
                     ecwt_r(ielectrode , : , :) = resample(squeeze(ecwt(ielectrode , : , :))' , 1, 10)';
                 end
-%                 ecwt_r = ecwt(: , : , 1:10:2800);
 
                 disp(['Saving event ' num2str(ievent)]);
-%                 wave(ievent , :,:,:) = ecwt_r;
+
                 save(['../session_1/' num2str(ievent,'%03i') '.mat'] ,  'ecwt_r');
-%                 parfor ielectrode = 1:size(obj.eventsEEG , 3)
-%                     [wave(ievent , ielectrode , : , :), ~, ~, ~, ~, ~, ~] = ...
-%                         contwt(obj.eventsEEG(ievent , : , ielectrode), 1/Fs, 0, obj.spacing, [], obj.numFreqs, 'MORLET', 5);    
-%                 end
                 disp('saved')
             end
         end
