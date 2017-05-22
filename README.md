@@ -7,7 +7,7 @@ _How to USE:_
 **3. To train, and test, run `training_testing_SAG_xvalidate.m`**
 
 
-**Detailed Usage:**
+_Detailed Usage:_
 
 
 
