@@ -51,10 +51,13 @@ classdef session < handle
             % Returns EEG data associated with an event. eeg is returned
             % from noffset ms before the event onset to poffset ms after. There
             % can also be a buffer (ms) added befor and after the epoch.
+            
+            div = 1000.0/obj.sampleRate;
+            
             eegIdx = event.eegoffset;
-            noffset = floor(noffset/2);
-            poffset = floor(poffset/2);
-            buffer = floor(buffer/2);
+            noffset = floor(noffset/div);
+            poffset = floor(poffset/div);
+            buffer = floor(buffer/div);
             eventEEG = obj.eegData( eegIdx - (noffset + buffer) : eegIdx + ...
                 (poffset + buffer)-1 , : );
         end

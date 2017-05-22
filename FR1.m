@@ -78,9 +78,9 @@ classdef FR1 < experiment
             obj.seteegrange(eegRange , buffer);
             obj.setspacing(freqRange , numFreqs);
             
-            % Trim eeg for all events:
+                        % Trim eeg for all events:
             taskEvents = obj.sessions(sessionID).taskEvents;
-            sigLen = (sum(eegRange) + 2 * buffer)/2;
+            sigLen = (sum(eegRange) + 2 * buffer)/(1000/obj.sessions('0').sampleRate);
             
             eventsEEG = zeros(numel(taskEvents) , sigLen , size(obj.sessions(sessionID).eegData,2));
 %             parpool('local' , 2);

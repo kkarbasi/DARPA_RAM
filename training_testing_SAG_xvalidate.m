@@ -3,20 +3,29 @@ clear all; close all
 %% Load training data
 fprintf('Loading Training Data\n');
 
-load('~/cosmic-home/DARPARAM/traindata.mat');
-% load('~/cosmic-home/DARPARAM/testdata_sess_1.mat');
+sess0 = '~/cosmic-home/DARPARAM/traindata.mat';
+sess1 = '~/cosmic-home/DARPARAM/testdata_sess_1.mat';
 
-%%% removing missing channels of session 1
-a = cell2mat(trainingData);
-a(:, [19 20 66], :) = [];
-trainingData = num2cell(a);
+trainVar = 'sess1';
+testVar = 'sess0';
+
+load(eval(trainVar));
+
+%%% removing channels from session 0 that are missing in session 1
+if strcmp(trainVar, 'sess0')
+    a = cell2mat(trainingData);
+    a(:, [19 20 66], :) = [];
+    trainingData = num2cell(a);
+end
 
 y_train = trainingLabels';
 X_train = reshape(trainingData, size(trainingData , 1), []);
 X_train = cell2mat(X_train);
 
 X_train = [ones(size(X_train,1),1) standardizeCols(X_train)];
-y_train(y_train==0) = -1;
+X_train = [ones(size(X_train,1),1) X_train];
+X_train = double(X_train);
+% y_train(y_train==0) = -1;
 
 clearvars 'trainingData' 'trainingLabels'
 %% Load test data
@@ -24,24 +33,28 @@ clearvars 'trainingData' 'trainingLabels'
 %%% Load data
 % clear all
 fprintf('Loading Test Data\n');
-load('~/cosmic-home/DARPARAM/testdata_sess_1.mat');
-% load('~/cosmic-home/DARPARAM/traindata.mat')
-% 
-% a = cell2mat(trainingData);
-% a(:, [19 20 66], :) = [];
-% trainingData = num2cell(a);
+load(eval(testVar));
+
+if strcmp(testVar, 'sess0')
+    a = cell2mat(trainingData);
+    a(:, [19 20 66], :) = [];
+    trainingData = num2cell(a);
+end
 
 y_test = trainingLabels';
 X_test = reshape(trainingData, size(trainingData , 1), []);
 X_test = cell2mat(X_test);
 
+X_test_orig = X_test;
 X_test = [ones(size(X_test,1),1) standardizeCols(X_test)];
+X_test = [ones(size(X_test,1),1) X_test];
+X_test = double(X_test);
 
 clearvars 'trainingData' 'trainingLabels'
 
 %% X-Validate on lambda
-%lambdas = logspace(-6, 4, 22);
-lambdas = 372.7594;
+lambdas = logspace(-6, 4, 22);
+%lambdas = 372.7594;
 AUCs = [];
 for ll = 1:numel(lambdas)
     
@@ -56,7 +69,7 @@ for ll = 1:numel(lambdas)
     randn('state',0);
 
     %%% Set up problem
-    maxIter = n*1000; % 10 passes through the data set
+    maxIter = n*10000; % 10 passes through the data set
     
     
 
@@ -93,12 +106,13 @@ for ll = 1:numel(lambdas)
     
     y_h = sigmoid(X_test*w);
     [x1 , y1 ,~, AUC ] = perfcurve(y_test' , y_h , 1);
-    fh = figure; plot(x1,y1)
+    fh = figure; plot(x1,y1); hold on
     title(['Lambda = ' num2str(lambda) ';  AUC = ' num2str(AUC)])
-    
+    plot( [0 1] , [0 1] , '--r'); hold off
 %     saveas(fh , ['~/snel/share/derived/DARPA_RAM/R1063C_XVal_tr_1_test_0/' num2str(lambda) '.jpg']) 
 %     close(fh)
     AUCs = [AUCs AUC];
+    pause(0.1)
     
 end
 
@@ -119,6 +133,6 @@ for tt = 1:numel(y_test)
     
 end
 plot([1 tt],[0.5 0.5] ,'--k' , 'linewidth' , 2)
-title('Classifier output probability for test data (session 0)')
+title('Classifier output probability for test data (session 1)')
 xlabel('Word Event (each 12 event is a list, total 25 lists)')
 ylabel('probability')

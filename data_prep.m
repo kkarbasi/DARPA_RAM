@@ -1,7 +1,7 @@
 %% find all events filenames
-% ef = regexdir('~/snel/share/derived/DARPA_RAM/events_resampled_bp' , '^\d\d\d\.mat$');
+ef = regexdir('~/snel/share/derived/DARPA_RAM/events_resampled_bp' , '^\d\d\d\.mat$');
 
-ef = regexdir('/home/snel/mnt/kaveh/DARPARAM/events_resampled_bp/' , '^\d\d\d\.mat$');
+% ef = regexdir('~/cosmic-home/DARPARAM/events_resampled_bp/' , '^\d\d\d\.mat$');
 
 % ef = regexdir('../session_1' , '^\d\d\d\.mat$');
 ef = unique(ef);
@@ -15,13 +15,13 @@ buffer = 150/2;
 %% load all events data
 
 % events_all = cell(numEvents , 1);
-events_all = zeros([numEvents , size(ecwt_r,1) , size(ecwt_r,2) , size(ecwt_r,3) - buffer*2], 'single'); % event X channel X freq X time
+events_all = zeros([numEvents , size(ecwt_r,1) , size(ecwt_r,2) , size(ecwt_r,3) - buffer*2-100], 'single'); % event X channel X freq X time
 
 for ievent = 1 : numEvents
     load(ef{ievent}); 
     % do abs and cast to single (memory)
     curr_ev = single( abs( ecwt_r ) );
-    events_all(ievent , : ,: ,:) = curr_ev( : , : , buffer+1 : end-buffer );
+    events_all(ievent , : ,: ,:) = curr_ev( : , : , buffer+50+1 : end-buffer-50 );
 end
 
 %% Permute and reshape to calculate mean and std of each channel at each frequency
