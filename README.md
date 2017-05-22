@@ -1,6 +1,8 @@
-**You can sart using by running cells in the sample_run.m script**
-**To prepare training data, run prep_data.m script after loading data using sample_run script**
+_How to USE:_
 
+**1. You can sart using by running cells in the `sample_run.m` script**
+**2. To prepare training data, run `data_prep.m` script after loading data using sample_run script**
+**3. To train, and test, run `training_testing_SAG_xvalidate.m`**
 
 
 **Detailed Usage:**
