@@ -3,8 +3,8 @@ clear all; close all
 %% Load training data
 fprintf('Loading Training Data\n');
 
-sess0 = '~/cosmic-home/DARPARAM/traindata.mat';
-sess1 = '~/cosmic-home/DARPARAM/testdata_sess_1.mat';
+sess0 = '~/cosmic-home/DARPARAM/train_test_data/sess0.mat';
+sess1 = '~/cosmic-home/DARPARAM/train_test_data/sess1.mat';
 
 trainVar = 'sess1';
 testVar = 'sess0';
@@ -53,8 +53,8 @@ X_test = double(X_test);
 clearvars 'trainingData' 'trainingLabels'
 
 %% X-Validate on lambda
-lambdas = logspace(-6, 4, 22);
-%lambdas = 372.7594;
+% lambdas = logspace(-6, 4, 22);
+lambdas = 1300;
 AUCs = [];
 for ll = 1:numel(lambdas)
     

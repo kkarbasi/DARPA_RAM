@@ -92,11 +92,11 @@ classdef FR1 < experiment
             % now eventsEEG is of size (num task events , epoch
             % range(2800*2 ms) in paper) , num channels)
            obj.eventsEEG = eventsEEG;
-           obj.dummy();
+           obj.wt_log_resample();
            
         end
         
-        function ievent = dummy(obj)
+        function ievent = wt_log_resample(obj)
             
             Fs = obj.sessions('0').sampleRate;
 %             wave = zeros(size(obj.eventsEEG , 1) , size(obj.eventsEEG , 3) , obj.numFreqs+1 , 280);

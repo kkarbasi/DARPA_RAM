@@ -1,5 +1,5 @@
 %% find all events filenames
-ef = regexdir('~/snel/share/derived/DARPA_RAM/events_resampled_bp' , '^\d\d\d\.mat$');
+ef = regexdir('~/snel/share/derived/DARPA_RAM/session_1' , '^\d\d\d\.mat$');
 
 % ef = regexdir('~/cosmic-home/DARPARAM/events_resampled_bp/' , '^\d\d\d\.mat$');
 
@@ -86,7 +86,7 @@ for ievent = 1:numEvents
 end
 
 %% Get word event indices
-sessID = '0';
+sessID = '1';
 [we , wi]  = s1.experiments('FR1').getwordevents(sessID);
 
 %% Extract word event training data
