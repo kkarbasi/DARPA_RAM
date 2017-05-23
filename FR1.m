@@ -21,22 +21,6 @@ classdef FR1 < experiment
     end
     
     methods
-%         function [wordEvents , wei] = getwordevents(obj , sessionID)
-%             numEvents = numel(obj.sessions(sessionID).taskEvents);
-%             wordEvents = {};
-%             wei = []; % word event indices
-%             wec = 1; % word event count
-%             for ievent = 1 : numEvents
-%                 if strcmp(obj.sessions(sessionID).taskEvents{ievent}.type...
-%                         , 'WORD')
-%                     wordEvents{wec} =  obj.sessions(sessionID).taskEvents{ievent};
-%                     wec = wec + 1;
-%                     wei = [wei ievent];
-%                 end
-%                     
-%             end
-%             
-%         end
         
         function wList = getwordlist(obj , sessionID) 
             % get a list of used words in session sessionID of this
