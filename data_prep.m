@@ -1,6 +1,6 @@
 %% Run this file for each session.
 %% find all events filenames
-sessID = '1';
+sessID = '0';
 ef = regexdir(['~/snel/share/derived/DARPA_RAM/cmwt&resampled/session_' , sessID] , '^\d\d\d\.mat$');
 
 ef = unique(ef);
@@ -18,7 +18,7 @@ buffer = 150/2;
 
 
 %% load all events data
-
+disp('Loading event data...')
 % events_all = cell(numEvents , 1);
 events_all = zeros([numEvents , size(ecwt_r,1) , size(ecwt_r,2) , size(ecwt_r,3) - buffer*2-100], 'single'); % event X channel X freq X time
 
@@ -33,10 +33,10 @@ end
 %% Permute and reshape to calculate mean and std of each channel at each frequency
 %PERMUTE%
 events_all_tmp = permute(events_all , [2, 3, 1, 4]);
-disp(size(events_all_tmp))
+
 %RESHAPE%
 events_all_tmp = reshape(events_all_tmp , size(events_all_tmp , 1) , size(events_all_tmp , 2) , []);
-disp(size(events_all))
+
 
 %% Calc mean and std of each channel at each frequency
 avgs = mean(events_all_tmp , 3);
@@ -50,6 +50,7 @@ zscored = num2cell(events_all , 4);
 
 
 %% zscoring
+disp('Calculating zscore...')
 for ievent = 1:numEvents
     
     for ichannel = 1:numChannels
@@ -67,12 +68,14 @@ end
 trainingData = zscored;
 
 %% Extract training labels
+[we , ~] = s1.experiments('FR1').sessions(sessID).getwordevents;
 trainingLabels = zeros(size(we));
 for iwe = 1 : size(we , 2)
     trainingLabels(iwe) = we{iwe}.recalled;
 end
 
 %% save to disk
+disp('Saving to disk...')
 filename = fullfile('~/snel/share/derived/DARPA_RAM/training_testing_data/' , ['sess' sessID '.mat']);
 save(filename , 'trainingData' , 'trainingLabels');
 
