@@ -62,6 +62,23 @@ classdef session < handle
                 (poffset + buffer)-1 , : );
         end
         
+        function [wordEvents , wei] = getwordevents(obj)
+            numEvents = numel(obj.taskEvents);
+            wordEvents = {};
+            wei = []; % word event indices
+            wec = 1; % word event count
+            for ievent = 1 : numEvents
+                if strcmp(obj.taskEvents{ievent}.type...
+                        , 'WORD')
+                    wordEvents{wec} =  obj.taskEvents{ievent};
+                    wec = wec + 1;
+                    wei = [wei ievent];
+                end
+                    
+            end
+            
+        end
+        
     end
     
     methods (Access = protected)

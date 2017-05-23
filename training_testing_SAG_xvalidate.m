@@ -3,8 +3,8 @@ clear all; close all
 %% Load training data
 fprintf('Loading Training Data\n');
 
-sess0 = '~/cosmic-home/DARPARAM/train_test_data/sess0.mat';
-sess1 = '~/cosmic-home/DARPARAM/train_test_data/sess1.mat';
+sess0 = '~/snel/share/derived/DARPA_RAM/train_test_data/sess0.mat';
+sess1 = '~/snel/share/derived/DARPA_RAM/train_test_data/sess1.mat';
 
 trainVar = 'sess1';
 testVar = 'sess0';
@@ -22,8 +22,8 @@ y_train = trainingLabels';
 X_train = reshape(trainingData, size(trainingData , 1), []);
 X_train = cell2mat(X_train);
 
-X_train = [ones(size(X_train,1),1) standardizeCols(X_train)];
-% X_train = [ones(size(X_train,1),1) X_train];
+% X_train = [ones(size(X_train,1),1) standardizeCols(X_train)];
+X_train = [ones(size(X_train,1),1) X_train];
 X_train = double(X_train);
 % y_train(y_train==0) = -1;
 
@@ -46,8 +46,8 @@ X_test = reshape(trainingData, size(trainingData , 1), []);
 X_test = cell2mat(X_test);
 
 X_test_orig = X_test;
-X_test = [ones(size(X_test,1),1) standardizeCols(X_test)];
-% X_test = [ones(size(X_test,1),1) X_test];
+% X_test = [ones(size(X_test,1),1) standardizeCols(X_test)];
+X_test = [ones(size(X_test,1),1) X_test];
 X_test = double(X_test);
 
 clearvars 'trainingData' 'trainingLabels'

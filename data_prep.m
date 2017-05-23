@@ -1,10 +1,11 @@
+%% Run this file for each session.
 %% find all events filenames
 sessID = '1';
-ef = regexdir(['~/snel/share/derived/DARPA_RAM/session_' , sessID] , '^\d\d\d\.mat$');
+ef = regexdir(['~/snel/share/derived/DARPA_RAM/cmwt&resampled/session_' , sessID] , '^\d\d\d\.mat$');
 
 ef = unique(ef);
 
-
+numEvents = numel(ef);
 load(ef{1})
 numChannels = size(ecwt_r , 1);
 numFreqs = size(ecwt_r , 2);
@@ -12,8 +13,8 @@ buffer = 150/2;
 
 %% 
 
-[we , wi]  = s1.experiments('FR1').getwordevents(sessID);
-numEvents = numel(wi);
+% [we , wi]  = s1.experiments('FR1').sessions(sessID).getwordevents();
+% numEvents = numel(wi);
 
 
 %% load all events data
@@ -22,7 +23,7 @@ numEvents = numel(wi);
 events_all = zeros([numEvents , size(ecwt_r,1) , size(ecwt_r,2) , size(ecwt_r,3) - buffer*2-100], 'single'); % event X channel X freq X time
 
 for ievent = 1 : numEvents
-    load(ef{wi(ievent)}); 
+    load(ef{ievent}); 
     % do abs and cast to single (memory)
     curr_ev = single( abs( ecwt_r ) );
     events_all(ievent , : ,: ,:) = curr_ev( : , : , buffer+50+1 : end-buffer-50 );
@@ -70,3 +71,9 @@ trainingLabels = zeros(size(we));
 for iwe = 1 : size(we , 2)
     trainingLabels(iwe) = we{iwe}.recalled;
 end
+
+%% save to disk
+filename = fullfile('~/snel/share/derived/DARPA_RAM/training_testing_data/' , ['sess' sessID '.mat']);
+save(filename , 'trainingData' , 'trainingLabels');
+
+
