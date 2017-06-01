@@ -1,15 +1,17 @@
 %% Run this file for each session.
 %% find all events filenames
-sessID = '0';
-ef = regexdir(['~/snel/share/derived/DARPA_RAM/cmwt&resampled/session_' , sessID] , '^\d\d\d\.mat$');
+subject_data_path = '/5-31-17/R1135E/';
+sessID = '3';
+ef = regexdir(['~/snel/share/derived/DARPA_RAM/cmwt&resampled' subject_data_path 'session_' , sessID] , '^\d\d\d\.mat$');
 
 ef = unique(ef);
 
 numEvents = numel(ef);
-load(ef{1})
+load(ef{1}) 
 numChannels = size(ecwt_r , 1);
 numFreqs = size(ecwt_r , 2);
-buffer = 150/2;
+samplingRate = 1000; %Hz
+buffer = 150/(1000/samplingRate);
 
 %% 
 
@@ -23,10 +25,14 @@ disp('Loading event data...')
 events_all = zeros([numEvents , size(ecwt_r,1) , size(ecwt_r,2) , size(ecwt_r,3) - buffer*2-100], 'single'); % event X channel X freq X time
 
 for ievent = 1 : numEvents
+    fprintf(repmat('\b' , 1,9))
+    fprintf(['Event ' num2str(ievent , '%03i')]);
+    
     load(ef{ievent}); 
     % do abs and cast to single (memory)
     curr_ev = single( abs( ecwt_r ) );
     events_all(ievent , : ,: ,:) = curr_ev( : , : , buffer+50+1 : end-buffer-50 );
+    
 end
 
 
@@ -68,7 +74,7 @@ end
 trainingData = zscored;
 
 %% Extract training labels
-[we , ~] = s1.experiments('FR1').sessions(sessID).getwordevents;
+[we , ~] = s1.experiments('catFR1').sessions(sessID).getwordevents;
 trainingLabels = zeros(size(we));
 for iwe = 1 : size(we , 2)
     trainingLabels(iwe) = we{iwe}.recalled;
@@ -76,7 +82,9 @@ end
 
 %% save to disk
 disp('Saving to disk...')
-filename = fullfile('~/snel/share/derived/DARPA_RAM/training_testing_data/' , ['sess' sessID '.mat']);
+save_folder_path = fullfile('~/snel/share/derived/DARPA_RAM/training_testing_data' , subject_data_path);
+mkdirRecursive(save_folder_path);
+filename = fullfile(save_folder_path , ['sess' sessID '.mat']);
 save(filename , 'trainingData' , 'trainingLabels');
-
+disp(['Saved to ' filename])
 

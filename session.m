@@ -19,6 +19,11 @@ classdef session < handle
             obj.taskEvents = taskEvents;
             obj.eegData = eegData;
             obj.sampleRate = sourceData.sample_rate;
+
+            if sourceData.sample_rate == 999; obj.sampleRate = sourceData.sample_rate +1; end;
+            if sourceData.sample_rate == 499; obj.sampleRate = sourceData.sample_rate +1; end;
+            if sourceData.sample_rate == 1599; obj.sampleRate = sourceData.sample_rate +1; end;
+            
             obj.nSamples = sourceData.n_samples;
         end
         

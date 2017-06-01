@@ -47,7 +47,7 @@ classdef subject < handle
                 case 'FR2'
                     disp('First, creat a class for FR2; You are the man!')
                 case 'catFR1'
-                    disp('First, creat a class for catFR1; You are the man!')
+                    obj.experiments(expName) = catFR1(obj.BASE_DIR , obj.r1.(expName));
                 case 'catFR2'
                     disp('First, creat a class for catFR2; You are the man!')
                 case 'PAL1'

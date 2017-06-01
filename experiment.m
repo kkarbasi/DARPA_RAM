@@ -36,7 +36,7 @@ classdef experiment < handle
         
     end
         
-    methods (Access = protected)
+    methods 
         
         function [bpeeg , sourceData] = getsesseeg(obj , sessName) 
             % loads eeg data corresponding to session sessName
@@ -69,7 +69,7 @@ classdef experiment < handle
                 [ch2eeg , success2] = readeegdata(ch2FN , dataFormat);
                 
                 if success1 && success2
-                    bpeeg(:,c) = abs(ch2eeg - ch1eeg);
+                    bpeeg(:,c) = ch2eeg - ch1eeg;
                     c = c + 1;
                 else
                     missed_channels = [missed_channels i];

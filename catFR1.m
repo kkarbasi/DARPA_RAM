@@ -1,4 +1,4 @@
-classdef FR1 < experiment
+classdef catFR1 < experiment
     properties
         noffset
         poffset
@@ -15,7 +15,7 @@ classdef FR1 < experiment
     end
     
     methods
-        function obj = FR1(BASE_DIR , expInfo)
+        function obj = catFR1(BASE_DIR , expInfo)
             obj@experiment(BASE_DIR , expInfo);
         end
         

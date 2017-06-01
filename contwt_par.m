@@ -154,7 +154,6 @@ k = [1:fix(n/2)];
 k = k.*((2.*pi)/(n*dt));
 k = [0., k, -k(fix((n-1)/2):-1:1)];
 
-
 %....compute FFT of the (padded) time series
 f = fft(x);    % [Eqn(3)]
 
@@ -171,13 +170,18 @@ wave = wave + i*wave;  % make it complex
 
 % loop through all scales and compute transform
 for a1 = 1:J1+1
-for nchannel = 1:size(x, 2)
+%for nchannel = 1:size(x, 2)
 	[daughter,fourier_factor,coi,dofmin, paramout]=wave_bases(mother,k,scale(a1),param);	
     daughter2 = repmat(daughter(:), 1, size(f, 2) ); % scale daughter for multiple electrodes
     
+    %original
+  
     tmp_ifft = ifft(f.*daughter2);  % wavelet transform[Eqn(4)]
     wave(:, a1,:) = tmp_ifft';
-end
+  
+    
+   
+%end
 end
 
 period = fourier_factor*scale;
