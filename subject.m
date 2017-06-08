@@ -3,7 +3,7 @@ classdef subject < handle
     properties
        BASE_DIR % Z:\snel\share\data\DARPA_RAM\session_data\experiment_data\
        r1 
-       experiments = containers.Map
+       experiments = []
        patientID
     end
     
@@ -23,7 +23,7 @@ classdef subject < handle
             % Constructor
             % r1.json, protocol full file name
             % patienID: patient  identifier
-                       
+            obj.experiments = containers.Map;           
             tmp = loadjson(r1Filename);
             if isfield(tmp.protocols.r1.subjects , patientID)
                 obj.r1 = tmp.protocols.r1.subjects.(patientID).experiments;

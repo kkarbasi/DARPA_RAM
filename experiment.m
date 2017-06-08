@@ -2,13 +2,14 @@ classdef experiment < handle
     properties
         BASE_DIR
         expInfo % like this: r1.protocols.r1.subjects.R1001P.experiments.FR1
-        sessions = containers.Map
+        sessions 
         
     end
     
     methods
         % constructor
         function obj = experiment(BASE_DIR , expInfo)
+            obj.sessions = containers.Map;
             obj.BASE_DIR = BASE_DIR;
             obj.expInfo = expInfo; 
             obj.loadsessions();

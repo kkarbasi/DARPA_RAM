@@ -110,7 +110,7 @@ for ll = 1:numel(lambdas)
 end
 disp('done')
 %% Plot classifier output probability
-load('y_h_from_py.mat')
+% load('y_h_from_py.mat')
 figure('Position' , [50 0 1200 280])
 
 plot(y_h(205:end))

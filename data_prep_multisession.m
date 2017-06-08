@@ -1,5 +1,9 @@
+%%
+% s1 = subject(r1_path , patientID);
+% s1.loadexperiment('FR1');
+% s1.loadexperiment('catFR1');
 %% Run this file for each session.
-for sess = 1:5
+for sess = 0:5
     
     %% find all events filenames
     subject_data_path = '/5-31-17/R1135E/';
@@ -71,19 +75,30 @@ for sess = 1:5
     trainingData = zscored;
 
     %% Extract training labels
-    if (find(sess == 0:3)); exType = 'FR1'; end
-    if (find(sess == 4:5)); exType = 'catFR1'; end
-    [we , ~] = s1.experiments(exType).sessions(sessID).getwordevents;
-    trainingLabels = zeros(size(we));
-    for iwe = 1 : size(we , 2)
-        trainingLabels(iwe) = we{iwe}.recalled;
-    end
-
+	
+    if find(sess == 0:3)
+        disp('In FR1')
+		[we , ~] = s1_FR1.experiments('FR1').sessions(sessID).getwordevents;
+		trainingLabels = zeros(size(we));
+		for iwe = 1 : size(we , 2)
+			trainingLabels(iwe) = we{iwe}.recalled;
+		end
+	end
+    if find(sess == 4:5)
+        disp('In catFR1')
+		sessID = num2str(sess-4);
+		[we , ~] = s1_catFR1.experiments('catFR1').sessions(sessID).getwordevents;
+		trainingLabels = zeros(size(we));
+		for iwe = 1 : size(we , 2)
+			trainingLabels(iwe) = we{iwe}.recalled;
+		end
+		sessID = num2str(sess);
+	end
     %% save to disk
     disp('Saving to disk...')
     save_folder_path = fullfile('~/snel/share/derived/DARPA_RAM/training_testing_data' , subject_data_path);
     mkdirRecursive(save_folder_path);
     filename = fullfile(save_folder_path , ['sess' sessID '.mat']);
-    save(filename , 'trainingData' , 'trainingLabels');
+    save(filename , 'trainingData' );
     disp(['Saved to ' filename])
 end
