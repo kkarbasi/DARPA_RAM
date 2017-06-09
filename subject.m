@@ -3,7 +3,7 @@ classdef subject < handle
     properties
        BASE_DIR % Z:\snel\share\data\DARPA_RAM\session_data\experiment_data\
        r1 
-       experiments = []
+       experiments
        patientID
     end
     
@@ -23,7 +23,7 @@ classdef subject < handle
             % Constructor
             % r1.json, protocol full file name
             % patienID: patient  identifier
-            obj.experiments = containers.Map;           
+%             obj.experiments = containers.Map;           
             tmp = loadjson(r1Filename);
             if isfield(tmp.protocols.r1.subjects , patientID)
                 obj.r1 = tmp.protocols.r1.subjects.(patientID).experiments;
@@ -41,23 +41,24 @@ classdef subject < handle
         end
         
         function loadexperiment(obj , expName)
+            disp(['Loading ' expName ' sessions...'])
             switch expName
                 case 'FR1'
-                    obj.experiments(expName) = FR1(obj.BASE_DIR , obj.r1.(expName));
+                    obj.experiments.(expName) = FR1(obj.BASE_DIR , obj.r1.(expName));
                 case 'FR2'
-                    disp('First, creat a class for FR2; You are the man!')
+                    disp('First, creat a class for FR2!')
                 case 'catFR1'
-                    obj.experiments(expName) = catFR1(obj.BASE_DIR , obj.r1.(expName));
+                    obj.experiments.(expName) = catFR1(obj.BASE_DIR , obj.r1.(expName));
                 case 'catFR2'
-                    disp('First, creat a class for catFR2; You are the man!')
+                    disp('First, creat a class for catFR2!')
                 case 'PAL1'
-                    disp('First, creat a class for PAL1; You are the man!')
+                    disp('First, creat a class for PAL1!')
                 case 'PAL2'
-                    disp('First, creat a class for PAL2; You are the man!')
+                    disp('First, creat a class for PAL2!')
                 case 'YC1'
-                    disp('First, creat a class for YC1; You are the man!')
+                    disp('First, creat a class for YC1!')
                 case 'YC2'
-                    disp('First, creat a class for YC2; You are the man!')
+                    disp('First, creat a class for YC2!')
                 otherwise
                     error([expName ' is not a valid expertiment type;'...
                         ' Choose from: FR1, FR2, PAL1, PAL2, YC1, YC2, catFR1, catFR2'])

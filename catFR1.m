@@ -9,8 +9,6 @@ classdef catFR1 < experiment
         numFreqs
         
         curr_sess
-        wordEventsCWT % cell array: Morlet transformed, log transformed, and resampled word events
-        wordEventsEEG % word events eeg
 %         weCWT %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<added for plots
     end
     
@@ -26,7 +24,7 @@ classdef catFR1 < experiment
         function wList = getwordlist(obj , sessionID) 
             % get a list of used words in session sessionID of this
             % experiment
-            wList = obj.sessions(sessionID).geteventfieldvalues('word');
+            wList = obj.sessions.(sessionID).geteventfieldvalues('word');
         end
         
         function obj = seteegrange(obj , range , buffer)
@@ -66,15 +64,15 @@ classdef catFR1 < experiment
             obj.setspacing(freqRange , numFreqs);
             disp('Extracting word events'' EEG')
             % Trim eeg for all events:
-            [wordEvents , ~] = obj.sessions(sessionID).getwordevents();
-            sigLen = (sum(eegRange) + 2 * buffer)/(1000/obj.sessions(sessionID).sampleRate);
+            [wordEvents , ~] = obj.sessions.(sessionID).getwordevents();
+            sigLen = (sum(eegRange) + 2 * buffer)/(1000/obj.sessions.(sessionID).sampleRate);
             
-            obj.wordEventsEEG = zeros(numel(wordEvents) , sigLen , size(obj.sessions(sessionID).eegData,2));
+            obj.sessions.(sessionID).wordEventsEEG = zeros(numel(wordEvents) , sigLen , size(obj.sessions.(sessionID).eegData,2));
             for ievent = 1:numel(wordEvents)
                 tmp = ...
-                    obj.sessions(sessionID).geteventeeg(wordEvents{ievent}...
+                    obj.sessions.(sessionID).geteventeeg(wordEvents{ievent}...
                     , obj.noffset , obj.poffset , obj.buffer);
-                obj.wordEventsEEG(ievent , : , :) = tmp;
+                obj.sessions.(sessionID).wordEventsEEG(ievent , : , :) = tmp;
             end
             % now wordEventsEEG is of size (num word events , epoch
             % range(2800*2 ms) in paper) , num channels)
@@ -83,38 +81,30 @@ classdef catFR1 < experiment
             % transform). Then log transforms the data, then resample at
             % 1/10 rate
             disp('Applying Morlet wavelet transform')
-            Fs = obj.sessions(sessionID).sampleRate;
-            obj.wordEventsCWT = cell(size(obj.wordEventsEEG , 1),1);
-%             obj.weCWT = cell(size(obj.wordEventsEEG , 1),1); %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<added for plots
-            for ievent = 1:size(obj.wordEventsEEG , 1)
+            Fs = obj.sessions.(sessionID).sampleRate;
+            obj.sessions.(sessionID).wordEventsCWT = cell(size(obj.sessions.(sessionID).wordEventsEEG , 1),1);
+%             obj.weCWT = cell(size(obj.sessions.(sessionID).wordEventsEEG , 1),1); %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<added for plots
+            for ievent = 1:size(obj.sessions.(sessionID).wordEventsEEG , 1)
                
 %             for ievent = 1:3   %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<added for plots
                 disp(['Processing word event ' num2str(ievent)]);
-                ecwt = contwt_par(squeeze(obj.wordEventsEEG(ievent , : , :)),...
+                ecwt = contwt_par(squeeze(obj.sessions.(sessionID).wordEventsEEG(ievent , : , :)),...
                     1/Fs, 0, obj.spacing, 1.0/200.0, obj.numFreqs, 'MORLET', 5);
               
 %                 obj.weCWT{ievent} = ecwt; %<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<added for plots
                 % log transform
                 ecwt = log(ecwt); 
                 ecwt_r = zeros(size(ecwt,1) , size(ecwt , 2) , floor(size(ecwt , 3)/10));
-                for ielectrode = 1:size(obj.wordEventsEEG , 3)
+                for ielectrode = 1:size(obj.sessions.(sessionID).wordEventsEEG , 3)
                     ecwt_r(ielectrode , : , :) = resample(squeeze(ecwt(ielectrode , : , :))' , 1, 10)';
                 end
-                obj.wordEventsCWT{ievent} = ecwt_r;
+                obj.sessions.(sessionID).wordEventsCWT{ievent} = ecwt_r;
                 
             end
         end
         
     end
     methods
-        function obj = saveCWTResampled(obj, folderPath)
-            for ievent = 1:numel(obj.wordEventsCWT)
-                disp(['Saving event ' num2str(ievent)]);
-                ecwt_r = obj.wordEventsCWT{ievent};
-                save(fullfile(folderPath, [num2str(ievent,'%03i') '.mat']) ,  'ecwt_r');
-                disp('saved')
-            end
-        end
         
     end
     

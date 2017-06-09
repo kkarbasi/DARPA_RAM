@@ -11,6 +11,11 @@ classdef session < handle
         nSamples % number of eeg samples
     end
     
+    properties
+        wordEventsCWT % cell array: Morlet transformed, log transformed, and resampled word events
+        wordEventsEEG % word events eeg
+    end
+    
     methods
         % constructor
         function obj = session(allEvents , taskEvents , mathEvents , eegData , sourceData)
@@ -83,6 +88,16 @@ classdef session < handle
             end
             
         end
+        
+        function obj = saveCWTResampled(obj, folderPath)
+            for ievent = 1:numel(obj.wordEventsCWT)
+                disp(['Saving event ' num2str(ievent)]);
+                ecwt_r = obj.wordEventsCWT{ievent};
+                save(fullfile(folderPath, [num2str(ievent,'%03i') '.mat']) ,  'ecwt_r');
+                disp('saved')
+            end
+        end
+        
         
     end
     

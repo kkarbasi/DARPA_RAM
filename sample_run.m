@@ -20,8 +20,9 @@ r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/pr
 patientID = 'R1135E';
 % experiment_type = 'catFR1';
 %% Load data for selected subject
-s1_FR1 = subject(r1_path , patientID);
-s1_FR1.loadexperiment('FR1');
+s1 = subject(r1_path , patientID);
+s1.loadexperiment('FR1');
+s1.loadexperiment('catFR1');
 
 
 %% Parameters 
@@ -48,7 +49,34 @@ buffer = 1500;
 % s1.experiments(experiment_type).saveCWTResampled(save_directory);
 
 
+%% Run wavelet and save (after changing maps to structs)
+disp('wavelength transform')
+expTypes = fieldnames(s1.experiments);
+for iexp = 1:numel(expTypes)
+    
+    curr_exp = expTypes{iexp};
+    disp(['Processing experiment ' curr_exp]);
+    sessIDs = fieldnames(s1.experiments.(curr_exp).sessions);
+    
+    for isess = 1:numel(sessIDs)
+       
+        curr_sess = sessIDs{isess};
+        disp(['Processing session ' curr_sess]);
+        s1.experiments.(curr_exp).cmwt(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 49);
+        save_directory = fullfile('~/snel/share/derived/DARPA_RAM/cmwt&resampled/6-8-17/R1135E/', curr_exp , curr_sess);
+        
+        mkdirRecursive(save_directory);
+        s1.experiments.(curr_exp).sessions.(curr_sess).saveCWTResampled(save_directory);
+
+    end
+end
+
+
+
+
 %% Run wavelet and save
+% x0x30_
+
 
 for sess = 0:3
     

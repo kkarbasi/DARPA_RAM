@@ -9,7 +9,7 @@ classdef experiment < handle
     methods
         % constructor
         function obj = experiment(BASE_DIR , expInfo)
-            obj.sessions = containers.Map;
+%             obj.sessions = containers.Map;
             obj.BASE_DIR = BASE_DIR;
             obj.expInfo = expInfo; 
             obj.loadsessions();
@@ -19,12 +19,13 @@ classdef experiment < handle
         % loads the current experiment sessions data
             sessNames = fieldnames(obj.expInfo.sessions);
             for i = 1:numel(sessNames)
-                disp(['Loading session ' getsessionid(sessNames{i}) ' ...'])
+                disp(['Loading session ' sessname2id(sessNames{i}) ' ...'])
                 allEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).all_events));
                 taskEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).task_events));
                 mathEvents = loadjson(fullfile(obj.BASE_DIR , obj.expInfo.sessions.(sessNames{i}).math_events));
                 [eegData , sourceData] = obj.getsesseeg(sessNames{i});
-                obj.sessions(getsessionid( sessNames{i} ) ) = ...
+%                 obj.sessions(sessname2id( sessNames{i} ) ) = ...
+                 obj.sessions.(sessNames{i}) = ...
                     session( allEvents , taskEvents , mathEvents ,...
                     eegData , sourceData );
             end
@@ -40,7 +41,7 @@ classdef experiment < handle
     methods 
         
         function [bpeeg , sourceData] = getsesseeg(obj , sessName) 
-            % loads eeg data corresponding to session sessName
+            % loads bipolar seeg data corresponding to session sessNam
             
             eegpath = obj.eegpathmaker(sessName);
             sources = loadjson(fullfile(obj.BASE_DIR , eegpath , 'sources.json'));
@@ -99,21 +100,6 @@ classdef experiment < handle
             
         end
         
-%         function bpeeg = getbipolareeg(obj , sessName , eeg)
-%             disp('Extracting bipolar eeg...')
-%             pairs = obj.getpairs(sessName);
-%             pairNames = fieldnames(pairs);
-%             bpeeg = zeros(size(eeg , 1) , numel(pairNames));
-%             for i = 1:numel(pairNames)
-%                 ch1 = pairs.(pairNames{i}).channel_1;
-%                 ch2 = pairs.(pairNames{i}).channel_2;
-%                 ch1 = eeg(:,ch1);
-%                 ch2 = eeg(:,ch2);
-%                 bpeeg(:,i) = abs(ch2 - ch1);
-%             end
-%             
-%         end
-
     end
     
 end
@@ -133,11 +119,13 @@ function Outfiles=regexdir(baseDir,searchExpression)
     end
 end
 
-function sessID = getsessionid(sessName)
+function sessID = sessname2id(sessName)
+    % Converts session name to session id
     sessID = sessName(5);
 end
 
 function [eeg , success] = readeegdata(filename , dataFormat)
+    % Reads the raw seeg ephys file, given by filename, in format "dataFormat" 
     if exist(filename , 'file')
         f = fopen(filename);
         eeg = fread(f , dataFormat);
