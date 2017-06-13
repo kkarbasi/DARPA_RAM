@@ -4,6 +4,7 @@ classdef session < handle
         mathEvents
         taskEvents
         eegData
+        sessionID
     end
           
     properties
@@ -12,24 +13,47 @@ classdef session < handle
     end
     
     properties
+        trainingData
+        trainingLabels
         wordEventsCWT % cell array: Morlet transformed, log transformed, and resampled word events
         wordEventsEEG % word events eeg
     end
     
     methods
         % constructor
-        function obj = session(allEvents , taskEvents , mathEvents , eegData , sourceData)
-            obj.allEvents = allEvents;
-            obj.mathEvents = mathEvents;
-            obj.taskEvents = taskEvents;
-            obj.eegData = eegData;
-            obj.sampleRate = sourceData.sample_rate;
+%         function obj = session(allEvents , taskEvents , mathEvents , eegData , sourceData)
+%             obj.allEvents = allEvents;
+%             obj.mathEvents = mathEvents;
+%             obj.taskEvents = taskEvents;
+%             obj.eegData = eegData;
+%             obj.sampleRate = sourceData.sample_rate;
+% 
+%             if sourceData.sample_rate > 998 && sourceData.sample_rate < 1002; obj.sampleRate = 1000; end
+%             if sourceData.sample_rate > 498 && sourceData.sample_rate < 502; obj.sampleRate = 500; end
+%             if sourceData.sample_rate > 1598 && sourceData.sample_rate < 1602; obj.sampleRate = 1600; end
+%             
+%             obj.nSamples = sourceData.n_samples;
+%         end
+        function obj = session(varargin)
+            if nargin>0
+                allEvents = varargin{1}; taskEvents = varargin{2};
+                mathEvents = varargin{3}; eegData = varargin{4};
+                sourceData = varargin{5}; sessionID = varargin{6};
+                
+                obj.allEvents = allEvents;
+                obj.mathEvents = mathEvents;
+                obj.taskEvents = taskEvents;
+                obj.eegData = eegData;
+                obj.sampleRate = sourceData.sample_rate;
 
-            if sourceData.sample_rate > 998 && sourceData.sample_rate < 1002; obj.sampleRate = 1000; end
-            if sourceData.sample_rate > 498 && sourceData.sample_rate < 502; obj.sampleRate = 500; end
-            if sourceData.sample_rate > 1598 && sourceData.sample_rate < 1602; obj.sampleRate = 1600; end
+                if sourceData.sample_rate > 998 && sourceData.sample_rate < 1002; obj.sampleRate = 1000; end
+                if sourceData.sample_rate > 498 && sourceData.sample_rate < 502; obj.sampleRate = 500; end
+                if sourceData.sample_rate > 1598 && sourceData.sample_rate < 1602; obj.sampleRate = 1600; end
+
+                obj.nSamples = sourceData.n_samples;
+                obj.sessionID = sessionID;
+            end
             
-            obj.nSamples = sourceData.n_samples;
         end
         
         function trimmedEEG = gettrimmedeeg(obj)
@@ -97,6 +121,11 @@ classdef session < handle
                 disp('saved')
             end
         end
+        
+        function savetrainingdata(obj)
+            
+        end
+        
         
         
     end
