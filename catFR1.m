@@ -58,7 +58,7 @@ classdef catFR1 < experiment
             end
         end
         
-        function obj = cmwt(obj , sessionID , eegRange , buffer , freqRange , numFreqs , resampRate,trim)
+        function obj = preptrainingdata(obj , sessionID , eegRange , buffer , freqRange , numFreqs , resampRate,trim)
             % Applying continuous Morlet wavelet transform
             
             % set eeg epoch range and frequency range and spacing

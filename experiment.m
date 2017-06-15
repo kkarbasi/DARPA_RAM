@@ -83,14 +83,6 @@ classdef experiment < handle
 
 
         end
-                
-        function eegPath = eegpathmaker(obj , sessName)
-            % Extract this subject's eeg data path from the available event
-            % path in r1 struct
-            tmp = obj.expInfo.sessions.(sessName).all_events;
-            eegPath = fileparts(tmp);
-            eegPath = strrep(eegPath , 'behavioral' , 'ephys');
-        end
         
         function pairs = getpairs(obj , sessionName)
             pairsPath = obj.expInfo.sessions.(sessionName).pairs;
@@ -100,6 +92,17 @@ classdef experiment < handle
             
         end
         
+    end
+    methods (Access = protected)
+                        
+        function eegPath = eegpathmaker(obj , sessName)
+            % Extract this subject's eeg data path from the available event
+            % path in r1 struct
+            tmp = obj.expInfo.sessions.(sessName).all_events;
+            eegPath = fileparts(tmp);
+            eegPath = strrep(eegPath , 'behavioral' , 'ephys');
+        end
+
     end
     
 end
