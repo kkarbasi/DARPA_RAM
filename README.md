@@ -1,11 +1,6 @@
 _How to USE:_
 
-**1. You can sart using by running cells in the `sample_run.m` script**
-
-**2. To prepare training data, run `data_prep.m` script after loading data using sample_run script**
-
-**3. To train, and test, run `training_testing_SAG_xvalidate.m`**
-
+**You can sart using by running cells in the `sample_run.m` script**
 
 _Detailed Usage:_
 
@@ -28,30 +23,31 @@ _Detailed Usage:_
 
 **Get each experiment's session ids**:
 
-`subj1.experiments(<experiment type>).getsessionids`
+`subj1.experiments.<experiment type>.getsessionids`
 
 
 **Get a specific session's data**:
 
-`subj1.experiments(<experiment type>).sessions(<session id>).eegData` _% eeg recordings`_
+`subj1.experiments.<experiment type>.sessions.<session id>.eegData` _% bipolar sEEG recordings`_
 
-`subj1.experiments(<experiment type>).sessions(<session id>).allEvents` _% all events_
+`subj1.experiments.<experiment type>.sessions.<session id>.allEvents` _% all events_
 
-`subj1.experiments(<experiment type>).sessions(<session id>).taskEvents` _% only task events_
+`subj1.experiments.<experiment type>.sessions.<session id>.taskEvents` _% only task events_
 
-`subj1.experiments(<experiment type>).sessions(<session id>).mathEvents` _% only math events_
-
-
-**Get trimmed to events start/end eeg data**
-
-`subj1.experiments(<experiment type>).sessions(<session id>).gettrimmedeeg`
+`subj1.experiments.<experiment type>.sessions.<session id>.mathEvents` _% only math events_
 
 
 **Get a list of event data field names**
 
-`subj1.experiments(<experiment type>).sessions(<session id>).geteventfields`
+`subj1.experiments.<experiment type>.sessions.<session id>.geteventfields`
 
 
 **Get a list of values for a specific field in the event data**
 
 `subj1.experiments(<experiment type>).sessions(<session id>).geteventfieldvalues(<field name>)`
+
+
+**Return sEEG recordings from the first event to the last event**
+
+`subj1.experiments(<experiment type>).sessions(<session id>).gettrimmedeeg`
+

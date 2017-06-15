@@ -15,26 +15,14 @@ classdef session < handle
     properties
         trainingData
         trainingLabels
-        wordEventsCWT % cell array: Morlet transformed, log transformed, and resampled word events
+%         wordEventsCWT % cell array: Morlet transformed, log transformed, and resampled word events
         wordEventsEEG % word events eeg
     end
     
     methods
-        % constructor
-%         function obj = session(allEvents , taskEvents , mathEvents , eegData , sourceData)
-%             obj.allEvents = allEvents;
-%             obj.mathEvents = mathEvents;
-%             obj.taskEvents = taskEvents;
-%             obj.eegData = eegData;
-%             obj.sampleRate = sourceData.sample_rate;
-% 
-%             if sourceData.sample_rate > 998 && sourceData.sample_rate < 1002; obj.sampleRate = 1000; end
-%             if sourceData.sample_rate > 498 && sourceData.sample_rate < 502; obj.sampleRate = 500; end
-%             if sourceData.sample_rate > 1598 && sourceData.sample_rate < 1602; obj.sampleRate = 1600; end
-%             
-%             obj.nSamples = sourceData.n_samples;
-%         end
+
         function obj = session(varargin)
+            % Constructor
             if nargin>0
                 allEvents = varargin{1}; taskEvents = varargin{2};
                 mathEvents = varargin{3}; eegData = varargin{4};
@@ -97,6 +85,8 @@ classdef session < handle
         end
         
         function [wordEvents , wei] = getwordevents(obj)
+            % Returns a the word events of this session and the indices
+            % associated with the word events
             numEvents = numel(obj.taskEvents);
             wordEvents = {};
             wei = []; % word event indices
@@ -111,15 +101,6 @@ classdef session < handle
                     
             end
             
-        end
-        
-        function obj = saveCWTResampled(obj, folderPath)
-            for ievent = 1:numel(obj.wordEventsCWT)
-                disp(['Saving event ' num2str(ievent)]);
-                ecwt_r = obj.wordEventsCWT{ievent};
-                save(fullfile(folderPath, [num2str(ievent,'%03i') '.mat']) ,  'ecwt_r');
-                disp('saved')
-            end
         end
         
         function savetrainingdata(obj)

@@ -33,17 +33,18 @@ classdef experiment < handle
         end
         
         function sessNames = getsessionids(obj)
-            sessNames = obj.sessions.keys;
+            % Returns this experiment's loaded sessions' ids
+            sessNames = fieldnames(obj.sessions);
         end
         
     end
         
     methods 
         
-        function [bpeeg , sourceData] = getsesseeg(obj , sessName) 
-            % loads bipolar seeg data corresponding to session sessNam
+        function [bpeeg , sourceData] = getsesseeg(obj , sessionID) 
+            % loads bipolar seeg data corresponding to session sessionID
             
-            eegpath = obj.eegpathmaker(sessName);
+            eegpath = obj.eegpathmaker(sessionID);
             sources = loadjson(fullfile(obj.BASE_DIR , eegpath , 'sources.json'));
             eegFN = fieldnames(sources);
             eegFN = eegFN{1};
@@ -52,7 +53,7 @@ classdef experiment < handle
             
             disp('Extracting bipolar eeg...')
             
-            pairs = obj.getpairs(sessName);
+            pairs = obj.getpairs(sessionID);
             pairNames = fieldnames(pairs);
             nChannels = numel(pairNames); 
             textprogressbar('Reading EEG data: ' , nChannels , 'Channel'); pause(0.05);
@@ -84,10 +85,12 @@ classdef experiment < handle
 
         end
         
-        function pairs = getpairs(obj , sessionName)
-            pairsPath = obj.expInfo.sessions.(sessionName).pairs;
+        function pairs = getpairs(obj , sessionID)
+            % Returns the electrode pairs used for calculating the bipolar
+            % sEEG of the sessionID
+            pairsPath = obj.expInfo.sessions.(sessionID).pairs;
             pairsJson = loadjson(fullfile(obj.BASE_DIR , pairsPath));
-            subjectID = obj.expInfo.sessions.(sessionName).subject_alias;
+            subjectID = obj.expInfo.sessions.(sessionID).subject_alias;
             pairs = pairsJson.(subjectID).pairs;
             
         end
