@@ -107,14 +107,18 @@ classdef FR1 < experiment
                     1/Fs, 0, obj.spacing, 1.0/200.0, obj.numFreqs-1, 'MORLET', 5);
               
                 % log transform
-                ecwt = log(ecwt); 
+                 
+                ecwt = abs(ecwt).^2;
+                ecwt = log10(ecwt);
                 
                 ecwt_r = zeros(obj.numChannels , obj.numFreqs , floor(size(ecwt , 3)/resampRate));
                 for ielectrode = 1:size(obj.sessions.(sessionID).wordEventsEEG , 3)
                     ecwt_r(ielectrode , : , :) = resample(squeeze(ecwt(ielectrode , : , :))' , 1, resampRate)';
                 end
-                curr_ev = single( abs( ecwt_r ) );
-                events_all(ievent , : ,: ,:) = curr_ev( : , : , buffResampled+trimResampled+1 : end-buffResampled-trimResampled );
+%                 curr_ev = single( abs( ecwt_r ) );
+              
+%                 events_all(ievent , : ,: ,:) = curr_ev( : , : , buffResampled+trimResampled+1 : end-buffResampled-trimResampled );
+                events_all(ievent , : ,: ,:) = ecwt_r( : , : , buffResampled+trimResampled+1 : end-buffResampled-trimResampled );
 %                 obj.sessions.(sessionID).wordEventsCWT{ievent} = ecwt_r;
                 fprintf(repmat('\b',1,25))
             end

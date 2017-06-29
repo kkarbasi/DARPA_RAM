@@ -3,6 +3,10 @@
 utilpath = fileparts(utilfile);
 addpath(utilpath);
 
+[~, utilfile] = system('find . -name loadjson.m');
+utilpath = fileparts(utilfile);
+addpath(utilpath);
+
 
 %% Add Path
 switch lower(getUsername)
@@ -23,7 +27,7 @@ patientID = 'R1063C';
 %% Load data for selected subject
 s1 = subject(r1_path , patientID);
 s1.loadexperiment('FR1');
-s1.loadexperiment('catFR1');
+% s1.loadexperiment('catFR1');
 
 
 % %% Parameters 
@@ -34,6 +38,7 @@ noffset = 500; %ms
 poffset = 2100; %ms
 buffer = 1500; %ms
 trim = 500; %ms
+resamplef = 10; % resample to 1/resamplef
 
 
 
@@ -50,7 +55,7 @@ for iexp = 1:numel(expTypes)
         if ~(strcmp(curr_exp , 'catFR1') && isess > 2)
         curr_sess = sessIDs{isess};
         disp(['Processing session ' curr_sess]);
-        s1.experiments.(curr_exp).preptrainingdata(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 50 , 10 , trim);
+        s1.experiments.(curr_exp).preptrainingdata(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 50 , resamplef , trim);
 
         end
     end
@@ -78,13 +83,13 @@ for i = 1:2
 end
 
 %% in-session
-lambdas = logspace(-6,4,22);
-lambdas = lambdas(6)
+lambdas = logspace(-7,4,30);
+% lambdas = lambdas(6);
 [y_h , y_test ,AUCs , ws , maxIdx] = sc.trainis(lambdas , 25,12);
 
 %% multi-session
 
-lambdas = logspace(-7,4,30);
+lambdas = logspace(-8,1,40);
 % lambdas = lambdas(10)
 [y_h , y_test ,AUCs , ws , maxIdx] = sc.trainms(lambdas);
 
