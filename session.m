@@ -107,7 +107,42 @@ classdef session < handle
             
         end
         
-        
+        % Adding function for extracting LFADS data
+        function seq = createLFADSseq(obj, noffset, poffset, tpe)
+            %numEvents: Number of events to create seq from
+            %tpe: trials per event (to create multiple trials per each
+            %event for LFADS input)
+            [wEvents , ~] = obj.getwordevents();
+            numEvents = numel(wEvents);
+%             if numEvents > numel(wei)
+%                 error(['numEvents should be less than ' num2str(numel(wei))...
+%                     ' (number of word events)']);
+%             end
+            iseq = 1;
+            eegLength = (poffset + noffset)/(1000/obj.sampleRate);
+            trialIdx = int32(linspace(0 , eegLength , tpe+1)); 
+            for ie = 1:numEvents
+                weEEG = obj.geteventeeg(wEvents{ie} , noffset , poffset , 0); 
+%                 size(weEEG)
+                
+                for it = 1:numel(trialIdx)-1
+                    
+                    seq(iseq).trial = iseq;
+                    seq(iseq).sessionId = obj.sessionID;
+                    seq(iseq).ievent = ie;
+                    seq(iseq).itrial = it;
+                    seq(iseq).trialPerEvent = tpe;
+                    seq(iseq).y = weEEG( trialIdx(it) + 1 : trialIdx(it+1),:)';
+                    seq(iseq).fs = obj.sampleRate;
+                    seq(iseq).dtMs = 1000/obj.sampleRate;
+                    
+                    
+                    iseq= iseq + 1;
+                end
+            end
+            
+            
+        end
         
     end
     
