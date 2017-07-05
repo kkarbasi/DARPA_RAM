@@ -16,14 +16,13 @@ switch lower(getUsername)
     addpath(genpath('~/cosmic-home/DARPARAM')); % path to your code
 end
 
-% r1_path = '~/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
-r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
+r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+% r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
 % r1_path = '~/mnt/labs/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
 
 
 % patientID = 'R1135E';
 patientID = 'R1063C';
-
 %% Load data for selected subject
 s1 = subject(r1_path , patientID);
 s1.loadexperiment('FR1');
@@ -93,4 +92,10 @@ lambdas = logspace(-8,1,40);
 % lambdas = lambdas(10)
 [y_h , y_test ,AUCs , ws , maxIdx] = sc.trainms(lambdas);
 
+%% Prep for LFADS
+buffer = 1500;
+lower_b = 500 + buffer;
+upper_b = 2100 + buffer;
+target_freq = 125; %Hz
 
+seq = s1.experiments.FR1.sessions.x0x30_.createLFADSseq(lower_b,upper_b,125,7);

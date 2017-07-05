@@ -108,10 +108,13 @@ classdef session < handle
         end
         
         % Adding function for extracting LFADS data
-        function seq = createLFADSseq(obj, noffset, poffset, tpe)
-            %numEvents: Number of events to create seq from
-            %tpe: trials per event (to create multiple trials per each
-            %event for LFADS input)
+        function seq = createLFADSseq(obj, noffset, poffset, ds_target, tpe)
+            % numEvents: Number of events to create seq from
+            % tpe: trials per event (to create multiple trials per each
+            % event for LFADS input)
+            % ds_target: downsample target (Hz)
+            % trial_buffer
+            
             [wEvents , ~] = obj.getwordevents();
             numEvents = numel(wEvents);
 %             if numEvents > numel(wei)
@@ -119,10 +122,14 @@ classdef session < handle
 %                     ' (number of word events)']);
 %             end
             iseq = 1;
-            eegLength = (poffset + noffset)/(1000/obj.sampleRate);
-            trialIdx = int32(linspace(0 , eegLength , tpe+1)); 
+            eegLength = (poffset + noffset)/(1000/ds_target);
+            d = eegLength - 4*tpe;
+            
+            trialIdx = int32(linspace(0 , d , tpe+1)); 
+%             trialIdx(2:end) = trialIdx(2:end) + eegLength-d;
             for ie = 1:numEvents
                 weEEG = obj.geteventeeg(wEvents{ie} , noffset , poffset , 0); 
+                weEEG = resample(weEEG , 1 , obj.sampleRate/ds_target);
 %                 size(weEEG)
                 
                 for it = 1:numel(trialIdx)-1
@@ -132,7 +139,7 @@ classdef session < handle
                     seq(iseq).ievent = ie;
                     seq(iseq).itrial = it;
                     seq(iseq).trialPerEvent = tpe;
-                    seq(iseq).y = weEEG( trialIdx(it) + 1 : trialIdx(it+1),:)';
+                    seq(iseq).y = weEEG( trialIdx(it) + 1 : trialIdx(it+1)+eegLength-d,:)';
                     seq(iseq).fs = obj.sampleRate;
                     seq(iseq).dtMs = 1000/obj.sampleRate;
                     
@@ -147,7 +154,7 @@ classdef session < handle
     end
     
     methods (Access = protected)
-
+        
     end    
         
     
