@@ -16,8 +16,8 @@ switch lower(getUsername)
     addpath(genpath('~/cosmic-home/DARPARAM')); % path to your code
 end
 
-r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
-% r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
+% r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
 % r1_path = '~/mnt/labs/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
 
 
@@ -97,5 +97,7 @@ buffer = 1500;
 lower_b = 500 + buffer;
 upper_b = 2100 + buffer;
 target_freq = 125; %Hz
+trials_per_event = 7;
 
-seq = s1.experiments.FR1.sessions.x0x30_.createLFADSseq(lower_b,upper_b,125,7);
+seq = s1.experiments.FR1.sessions.x0x30_.createLFADSseq(lower_b,...
+    upper_b, target_freq, trials_per_event);
