@@ -113,8 +113,8 @@ classdef session < handle
             % tpe: trials per event (to create multiple trials per each
             % event for LFADS input)
             % ds_target: downsample target (Hz)
-            % trial_buffer
-            
+            % 
+            obj.zscoreallchannels();
             [wEvents , ~] = obj.getwordevents();
             numEvents = numel(wEvents);
 %             if numEvents > numel(wei)
@@ -133,7 +133,7 @@ classdef session < handle
 %                 figure; plot(weEEG(3:end-2,1));
                 weEEG = resample(weEEG , 1 , obj.sampleRate/ds_target);
                 
-                rs_padded_r = rs_padding/((obj.sampleRate/ds_target)*1000/obj.sampleRate);
+                rs_padded_r = rs_padding/(1000/ds_target);
                 weEEG = weEEG(rs_padded_r+1:end-rs_padded_r , :);
 %                 figure; plot(weEEG(:,1));title('resampled')
 %                 size(weEEG)
@@ -156,11 +156,27 @@ classdef session < handle
             
             
         end
+        function zscoreallchannels(obj)
+    %             obj.eegData = obj.eegData';
+            means = mean(obj.gettrimmedeeg);
+            stds = std(obj.gettrimmedeeg);
+            obj.eegData = bsxfun(@rdivide, bsxfun(@minus, obj.eegData, means(:)'), stds(:)'); 
+
+%             obj.eegData = obj.eegData';
+        end
+
         
     end
     
     methods (Access = protected)
-        
+%         function zscoreallchannels(obj)
+% %             obj.eegData = obj.eegData';
+%             means = mean(obj.eegData');
+%             stds = std(obj.eegData');
+%             obj.eegData = bsxfun(@rdivide, bsxfun(@minus, obj.eegData, means(:)), stds(:)); 
+%             
+% %             obj.eegData = obj.eegData';
+%         end
     end    
         
     
