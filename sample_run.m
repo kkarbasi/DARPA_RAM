@@ -39,7 +39,10 @@ buffer = 1500; %ms
 trim = 500; %ms
 resamplef = 10; % resample to 1/resamplef
 
-
+%% replace session event data with loaded event data from LFADS
+s1.experiments.FR1.sessions.x0x30_.wordEventsEEG = wordEventsEEG;
+%% scale the data back to the original mean/variance
+s1.experiments.FR1.sessions.x0x30_.scaleZSback();
 
 %% Run wavelet and save (after changing maps to structs)
 disp('wavelength transform')
@@ -54,7 +57,7 @@ for iexp = 1:numel(expTypes)
         if ~(strcmp(curr_exp , 'catFR1') && isess > 2)
         curr_sess = sessIDs{isess};
         disp(['Processing session ' curr_sess]);
-        s1.experiments.(curr_exp).preptrainingdata(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 50 , resamplef , trim);
+        s1.experiments.(curr_exp).preptrainingdata_from_LFADS(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 50 , resamplef , trim);
 
         end
     end
@@ -97,7 +100,7 @@ buffer = 1500;
 lower_b = 500 + buffer;
 upper_b = 2100 + buffer;
 target_freq = 125; %Hz
-trials_per_event = 7;
+trials_per_event = 1;
 
 seq = s1.experiments.FR1.sessions.x0x30_.createLFADSseq(lower_b,...
     upper_b, target_freq, trials_per_event);

@@ -165,6 +165,16 @@ classdef session < handle
 %             obj.eegData = obj.eegData';
         end
 
+        function scaleZSback(obj)
+            means = mean(obj.gettrimmedeeg);
+            stds = std(obj.gettrimmedeeg);
+            for ievent = 1:size(obj.wordEventsEEG,1)
+                obj.wordEventsEEG(ievent , : , :) = ...
+                    bsxfun(@plus , bsxfun(@times , squeeze(obj.wordEventsEEG(ievent , : , :))...
+                    ,stds(:)') , means(:)');
+            end
+            
+        end
         
     end
     
