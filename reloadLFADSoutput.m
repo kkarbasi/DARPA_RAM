@@ -1,4 +1,7 @@
 %%
+load('/home/kkarbasi/th/kkarbasi/data/DARPARAM/PMsampRun.mat')
+seq = seqResult{1};
+%%
 figure('pos' , [30 30 1600 200])
 realL = 96;
 L = 124;
@@ -25,7 +28,9 @@ imagesc(diff(data')')
 %imagesc(
 %tmp = [seq(ntrial).rates(1:110, 96+trim:end)
 
+
 %% 
+
 fs = seq(1).fs;
 realL = 96;
 L = numel(seq(1).y_time);

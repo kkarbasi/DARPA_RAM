@@ -16,8 +16,8 @@ switch lower(getUsername)
     addpath(genpath('~/cosmic-home/DARPARAM')); % path to your code
 end
 
-% r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
-r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
+r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+% r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
 % r1_path = '~/mnt/labs/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
 
 
@@ -35,7 +35,7 @@ s1.loadexperiment('FR1');
 
 noffset = 500; %ms
 poffset = 2100; %ms
-buffer = 1500; %ms
+buffer = 500; %ms
 trim = 500; %ms
 resamplef = 10; % resample to 1/resamplef
 
@@ -57,7 +57,7 @@ for iexp = 1:numel(expTypes)
         if ~(strcmp(curr_exp , 'catFR1') && isess > 2)
         curr_sess = sessIDs{isess};
         disp(['Processing session ' curr_sess]);
-        s1.experiments.(curr_exp).preptrainingdata_from_LFADS(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 50 , resamplef , trim);
+        s1.experiments.(curr_exp).preptrainingdata(curr_sess , [noffset , poffset] , buffer , [1 ,200] , 50 , resamplef , trim);
 
         end
     end

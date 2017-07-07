@@ -83,7 +83,7 @@ classdef FR1 < experiment
                     , obj.noffset , obj.poffset , obj.buffer);
                 obj.sessions.(sessionID).wordEventsEEG(ievent , : , :) = tmp;
             end
-            return;
+%             return;
             % now wordEventsEEG is of size (num word events , epoch
             % range(2800*2 ms) in paper) , num channels)
             % Executes the contwt_par function (vectorized wavelet
