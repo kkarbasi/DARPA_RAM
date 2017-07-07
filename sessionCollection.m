@@ -68,15 +68,15 @@ classdef sessionCollection < handle
             X = reshape(X, size(X , 1), []);
             X = cell2mat(X);
             X = double(X);
-           
-           
+            y_h_all = cell(1,numel(lambdas));
+            AUC_all = cell(1,numel(lambdas));
             all_idx = 1:size(X , 1);
-
+            funlogisticreg = @(X_train , y_train , lambda) obj.logisticreg(X_train , y_train , lambda);
             for ll = 1:numel(lambdas)
                 lambda = lambdas(ll);
                 disp(['lambda = ' num2str(lambda)])
                 y_h = [];
-                for ilist = 0 : numLists - 1
+                parfor ilist = 0 : numLists - 1
                     % hold one list out
                     test_idx = ilist*wpl + 1 : ilist*wpl + wpl;
 
@@ -94,15 +94,15 @@ classdef sessionCollection < handle
                     % train
                     
            
-                    w = obj.logisticreg(X_train , y_train , lambda);
-                    w_all{end+1} = w;
+                    w = funlogisticreg(X_train , y_train , lambda);
+                    %w_all{end+1} = w;
                     y_h = [y_h; sigmoid(X_test*w)];
                 end
-                y_h_all{end+1} = y_h;
+                y_h_all{ll} = y_h;
 %                 keyboard
                 [~ , ~ ,~, AUC ] = perfcurve(y' , y_h , 1);
                 disp(['AUC = ' num2str(AUC)])
-                AUC_all(end+1) = AUC;
+                AUC_all(ll) = AUC;
                 
             end
             
