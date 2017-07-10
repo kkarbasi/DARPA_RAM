@@ -16,8 +16,8 @@ switch lower(getUsername)
     addpath(genpath('~/cosmic-home/DARPARAM')); % path to your code
 end
 
-r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
-% r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
+% r1_path = '/home/kkarbasi/snel/share/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
+r1_path = '/mnt/scratch/data/DARPA_RAM/tar_files/session_data/experiment_data/protocols/r1.json';
 % r1_path = '~/mnt/labs/snel/share/data/DARPA_RAM/session_data/experiment_data/protocols/r1.json';
 
 
@@ -35,7 +35,9 @@ s1.loadexperiment('FR1');
 
 noffset = 500; %ms
 poffset = 2100; %ms
-buffer = 20; %ms
+
+buffer = 50; %ms
+
 trim = 500; %ms
 resamplef = 10; % resample to 1/resamplef
 
