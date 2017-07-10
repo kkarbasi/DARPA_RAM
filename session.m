@@ -128,10 +128,10 @@ classdef session < handle
             trialIdx = int32(linspace(0 , d , tpe+1)); 
 %             trialIdx(2:end) = trialIdx(2:end) + eegLength-d;
             for ie = 1:numEvents
-                rs_padding = 64; %ms
+                rs_padding = 50; %ms
                 weEEG = obj.geteventeeg(wEvents{ie} , noffset + rs_padding , poffset + rs_padding , 0); 
 %                 figure; plot(weEEG(3:end-2,1));
-                weEEG = resample(weEEG , 1 , obj.sampleRate/ds_target);
+                weEEG = resample(weEEG ,  ds_target ,obj.sampleRate);
                 
                 rs_padded_r = rs_padding/(1000/ds_target);
                 weEEG = weEEG(rs_padded_r+1:end-rs_padded_r , :);

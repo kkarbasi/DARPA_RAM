@@ -154,13 +154,20 @@ classdef FR1 < experiment
 
                 for ichannel = 1:obj.numChannels
                     for ifreq = 1:obj.numFreqs
-                        zscored{ievent , ichannel , ifreq} =...
-                            mean( (zscored{ievent , ichannel , ifreq}...
-                             - avgs(ichannel , ifreq)) ./ stds(ichannel , ifreq) );
+                        if (1<= ifreq) && (ifreq <15)
+                            zscored{ievent , ichannel , ifreq} = single(0.0);
+                        else
+                            zscored{ievent , ichannel , ifreq} =...
+                                mean( (zscored{ievent , ichannel , ifreq}...
+                                 - avgs(ichannel , ifreq)) ./ stds(ichannel , ifreq) );
+                        end
                     end
                 end
             end
-
+%             zscored(:,:,1:14) = 0;
+%             for i = 1:14
+%                 zscored{:,:,i} = 0;
+%             end
 
             % Extract word event training data
 
@@ -211,19 +218,24 @@ classdef FR1 < experiment
             events_all = zeros([obj.numEvents , obj.numChannels ,...
                 obj.numFreqs , sigLen/resampRate - buffResampled*2 - 2*trimResampled], 'single');
             % event X channel X freq X time
-            
-            for ievent = 1:size(obj.sessions.(sessionID).wordEventsEEG , 1)
-                fprintf(['Processing word event ' num2str(ievent , '%03i')]);
-                ecwt = contwt_par(squeeze(obj.sessions.(sessionID).wordEventsEEG(ievent , : , :)),...
-                    1/Fs, 0, obj.spacing, 1.0/200.0, obj.numFreqs-1, 'MORLET', 5);
+            parwordEventsEEG = obj.sessions.(sessionID).wordEventsEEG;
+            num_events = size(obj.sessions.(sessionID).wordEventsEEG , 1);
+            parObjSpacing = obj.spacing;
+            parObjnumFreqs = obj.numFreqs;
+            parObjnumChan = obj.numChannels;
+            %size(obj.sessions.(sessionID).wordEventsEEG , 3)
+            parfor ievent = 1:num_events
+                %disp(['Processing word event ' num2str(ievent , '%03i')]);
+                ecwt = contwt_par(squeeze(parwordEventsEEG(ievent , : , :)),...
+                    1/Fs, 0, parObjSpacing, 1.0/200.0, parObjnumFreqs - 1, 'MORLET', 5);
               
                 % log transform
                  
                 ecwt = abs(ecwt).^2;
                 ecwt = log10(ecwt);
                 
-                ecwt_r = zeros(obj.numChannels , obj.numFreqs , floor(size(ecwt , 3)/resampRate));
-                for ielectrode = 1:size(obj.sessions.(sessionID).wordEventsEEG , 3)
+                ecwt_r = zeros( parObjnumChan, parObjnumFreqs , floor(size(ecwt , 3)/resampRate));
+                for ielectrode = 1:parObjnumChan
                     ecwt_r(ielectrode , : , :) = resample(squeeze(ecwt(ielectrode , : , :))' , 1, resampRate)';
                 end
 %                 curr_ev = single( abs( ecwt_r ) );
@@ -231,9 +243,10 @@ classdef FR1 < experiment
 %                 events_all(ievent , : ,: ,:) = curr_ev( : , : , buffResampled+trimResampled+1 : end-buffResampled-trimResampled );
                 events_all(ievent , : ,: ,:) = ecwt_r( : , : , buffResampled+trimResampled+1 : end-buffResampled-trimResampled );
 %                 obj.sessions.(sessionID).wordEventsCWT{ievent} = ecwt_r;
-                fprintf(repmat('\b',1,25))
+                %fprintf(1,repmat('\b',1,25))
             end
-            disp([num2str(ievent) ' events was wavelet transformed and resampled'])
+            
+            disp([num2str(num_events) ' events was wavelet transformed and resampled'])
             
             % Permute and reshape to calculate mean and std of each channel at each frequency
             %PERMUTE%
@@ -260,9 +273,13 @@ classdef FR1 < experiment
 
                 for ichannel = 1:obj.numChannels
                     for ifreq = 1:obj.numFreqs
-                        zscored{ievent , ichannel , ifreq} =...
-                            mean( (zscored{ievent , ichannel , ifreq}...
-                             - avgs(ichannel , ifreq)) ./ stds(ichannel , ifreq) );
+                        if (1<= ifreq) && (ifreq <15)
+                            zscored{ievent , ichannel , ifreq} = single(0.0);
+                        else
+                            zscored{ievent , ichannel , ifreq} =...
+                                mean( (zscored{ievent , ichannel , ifreq}...
+                                 - avgs(ichannel , ifreq)) ./ stds(ichannel , ifreq) );
+                        end
                     end
                 end
             end

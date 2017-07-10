@@ -69,7 +69,7 @@ classdef sessionCollection < handle
             X = cell2mat(X);
             X = double(X);
             y_h_all = cell(1,numel(lambdas));
-            AUC_all = cell(1,numel(lambdas));
+            AUC_all = zeros(1,numel(lambdas));
             all_idx = 1:size(X , 1);
             funlogisticreg = @(X_train , y_train , lambda) obj.logisticreg(X_train , y_train , lambda);
             for ll = 1:numel(lambdas)
