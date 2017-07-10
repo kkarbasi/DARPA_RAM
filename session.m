@@ -164,7 +164,7 @@ classdef session < handle
 
 %             obj.eegData = obj.eegData';
         end
-
+c
         function scaleZSback(obj)
             means = mean(obj.gettrimmedeeg);
             stds = std(obj.gettrimmedeeg);

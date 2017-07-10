@@ -35,7 +35,7 @@ s1.loadexperiment('FR1');
 
 noffset = 500; %ms
 poffset = 2100; %ms
-buffer = 500; %ms
+buffer = 20; %ms
 trim = 500; %ms
 resamplef = 10; % resample to 1/resamplef
 
@@ -86,6 +86,7 @@ end
 
 %% in-session
 lambdas = logspace(-7,4,30);
+lambdas = lambdas(10:end);
 % lambdas = lambdas(6);
 [y_h , y_test ,AUCs , ws , maxIdx] = sc.trainis(lambdas , 25,12);
 

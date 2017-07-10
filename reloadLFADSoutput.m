@@ -51,7 +51,12 @@ for is  = 1:tpe:numel(seq)
 end
 
 
-
+%%
+% wordEventsEEG = zeros(300,2800,110);
+for is = 1:numel(seq)
+    tmp = resample(seq(is).rates' , 5 , 3);
+    wordEventsEEG(is , : , :) = tmp(: , 1:110);
+end
 
 
 
