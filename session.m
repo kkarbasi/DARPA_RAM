@@ -164,7 +164,17 @@ classdef session < handle
 
 %             obj.eegData = obj.eegData';
         end
-c
+
+        
+        function zscoreallchannelsByQuantile(obj)
+            %             obj.eegData = obj.eegData';
+            means = mean(obj.gettrimmedeeg);
+            stds = std(obj.gettrimmedeeg);
+            obj.eegData = bsxfun(@rdivide, bsxfun(@minus, obj.eegData, means(:)'), stds(:)');
+            
+            %             obj.eegData = obj.eegData';
+        end
+
         function scaleZSback(obj)
             means = mean(obj.gettrimmedeeg);
             stds = std(obj.gettrimmedeeg);

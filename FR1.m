@@ -273,13 +273,13 @@ classdef FR1 < experiment
 
                 for ichannel = 1:obj.numChannels
                     for ifreq = 1:obj.numFreqs
-                        if (1<= ifreq) && (ifreq <15)
-                            zscored{ievent , ichannel , ifreq} = single(0.0);
-                        else
+%                         if (1<= ifreq) && (ifreq <15)
+%                             zscored{ievent , ichannel , ifreq} = single(0.0);
+%                         else
                             zscored{ievent , ichannel , ifreq} =...
                                 mean( (zscored{ievent , ichannel , ifreq}...
                                  - avgs(ichannel , ifreq)) ./ stds(ichannel , ifreq) );
-                        end
+%                         end
                     end
                 end
             end
