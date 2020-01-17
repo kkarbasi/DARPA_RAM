@@ -1,4 +1,13 @@
-_How to USE:_
+# DARPA-RAM Matlab data Interface
+
+This code contains a set of classes and methods, mainly to perform two tasks:
+
+    1. To provide an easy-to-use interface for reading the DARPA RAM’s publicly available data.
+    2. To implement the classifier explained in Ezzyat et. al. (2017).
+    
+Detailed documentaion can be found [here](https://github.com/kkarbasi/DARPA_RAM/tree/master/doc).
+
+_How to Use:_
 
 **You can sart using by running cells in the `sample_run.m` script**
 
